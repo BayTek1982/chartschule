@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bayazit Chart-Schule</title>
+<meta name="description" content="Charts lesen lernen: Kerzen, Muster, Trendlinien, Indikatoren und Risiko – mit animierten Erklär-Videos und Quiz.">
+<meta name="theme-color" content="#05080d">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05080d; --panel:#0b1118; --card:#0f1620; --line:#1b2532; --text:#dfe6ef; --mute:#7f8b9c;
+  --up:#1fcf8f; --down:#f0605d; --gold:#f5c542; --blue:#4c9aff; --purple:#b388ff;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+  --sans:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit;cursor:pointer}
+header{position:sticky;top:0;z-index:5;background:rgba(5,8,13,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px 16px;display:flex;align-items:center;gap:12px}
+.logo{width:34px;height:34px;flex:none}
+.brand{font-family:var(--mono);font-weight:800;letter-spacing:.06em;font-size:15px;line-height:1.15}
+.brand small{display:block;color:var(--mute);font-weight:500;font-size:11px;letter-spacing:.12em}
+.prog{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--mute);text-align:right}
+.bar{width:110px;height:5px;background:var(--line);border-radius:9px;margin-top:5px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--up),var(--gold));width:0;transition:width .4s}
+main{display:grid;grid-template-columns:330px 1fr;max-width:1280px;margin:0 auto;min-height:calc(100vh - 60px)}
+#nav{border-right:1px solid var(--line);padding:14px 12px 40px;height:calc(100vh - 60px);overflow:auto;position:sticky;top:60px}
+#search{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;font-size:15px;outline:none}
+#search:focus{border-color:var(--gold)}
+.cat{margin:18px 4px 8px;font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--mute);text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.cat::after{content:"";flex:1;height:1px;background:var(--line)}
+.item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:1px solid transparent;border-radius:10px;padding:9px 8px;margin:2px 0}
+.item:hover{background:var(--card)}
+.item.on{background:var(--card);border-color:#2a3647}
+.item .ic{width:36px;height:36px;flex:none;border-radius:8px;background:var(--panel);border:1px solid var(--line);display:grid;place-items:center}
+.item b{display:block;font-size:14.5px;font-weight:600}
+.item span{display:block;font-size:12px;color:var(--mute);margin-top:1px}
+.item .ok{margin-left:auto;color:var(--up);font-size:14px;opacity:0}
+.item.seen .ok{opacity:1}
+#view{padding:18px 22px 60px;min-width:0}
+.back{display:inline-block;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:7px 12px;font-size:14px;margin-bottom:12px}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--mute);text-transform:uppercase}
+h1{font-family:var(--mono);font-weight:800;letter-spacing:.03em;font-size:clamp(24px,4.4vw,36px);margin:4px 0 4px;text-transform:uppercase}
+.lead{color:#b9c4d2;margin:0 0 14px;font-size:15.5px;line-height:1.5;max-width:760px}
+.player{background:#020407;border:1px solid var(--line);border-radius:16px;overflow:hidden;max-width:900px}
+.cwrap{position:relative;cursor:pointer}
+canvas{display:block;width:100%}
+.overlay{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;opacity:0;transition:opacity .25s}
+.overlay.show{opacity:1}
+.overlay div{background:rgba(5,8,13,.75);border:1px solid #2a3647;border-radius:999px;padding:12px 18px;font-family:var(--mono);font-weight:700;font-size:14px;letter-spacing:.06em}
+.caption{padding:12px 16px 4px;min-height:74px;border-top:1px solid var(--line)}
+.caption .no{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.14em}
+.caption p{margin:5px 0 0;font-size:15.5px;line-height:1.45;transition:opacity .25s}
+.ctrl{display:flex;align-items:center;gap:8px;padding:8px 12px 12px}
+.cb{background:var(--card);border:1px solid var(--line);border-radius:9px;min-width:40px;height:38px;padding:0 10px;font-family:var(--mono);font-size:14px;font-weight:700}
+.cb:hover{border-color:#36465b}
+#seek{flex:1;accent-color:#ef4444;height:28px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 12px 14px}
+.chip{background:none;border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-family:var(--mono);font-size:11.5px;color:var(--mute)}
+.chip.on{border-color:var(--gold);color:var(--gold)}
+.chip.done{color:var(--text)}
+.info{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-top:16px;max-width:900px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.box h3{margin:0 0 8px;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.box p,.box li{font-size:14.5px;line-height:1.5;color:#c9d2de;margin:0}
+.box ul{margin:0;padding-left:18px}.box li{margin:3px 0}
+.box.g h3{color:var(--up)}.box.y h3{color:var(--gold)}.box.b h3{color:var(--blue)}.box.r h3{color:var(--down)}
+.pn{display:flex;justify-content:space-between;gap:10px;margin-top:18px;max-width:900px}
+.pn button{flex:1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:left;font-size:14px}
+.pn button:last-child{text-align:right}
+.pn small{display:block;color:var(--mute);font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;margin-bottom:3px}
+.pn button:disabled{opacity:.35;cursor:default}
+.disc{color:var(--mute);font-size:12px;margin-top:22px;max-width:900px}
+.home{max-width:900px}
+.home .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-top:16px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:left}
+.tile:hover{border-color:#36465b}
+.tile b{display:block;font-family:var(--mono);font-size:14px;letter-spacing:.05em;text-transform:uppercase;margin:10px 0 4px}
+.tile span{color:var(--mute);font-size:13px}
+.quizbtn{background:linear-gradient(90deg,rgba(245,197,66,.12),transparent);border-color:#3a3320 !important;margin-top:12px}
+.qcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;max-width:760px}
+.qbar{height:5px;background:var(--line);border-radius:9px;overflow:hidden;margin-bottom:14px}.qbar i{display:block;height:100%;background:var(--gold)}
+.qq{font-size:18px;font-weight:700;line-height:1.4;margin:0 0 12px}
+.qcv{border-radius:12px;overflow:hidden;border:1px solid var(--line);margin-bottom:12px;background:#020407}
+.opts{display:grid;gap:8px}
+.opt{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px 14px;text-align:left;font-size:15.5px}
+.opt:hover:not(:disabled){border-color:#3a4a60}
+.opt.ok{border-color:var(--up);background:rgba(31,207,143,.12)}
+.opt.bad{border-color:var(--down);background:rgba(240,96,93,.12)}
+.opt:disabled{cursor:default}
+.fb{margin-top:12px;padding:12px 14px;border-radius:12px;background:var(--panel);border:1px solid var(--line);font-size:14.5px;line-height:1.5}
+.fb b{font-family:var(--mono)}
+.qnav{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.qnav button{flex:1;min-width:140px;border-radius:12px;padding:12px;font-weight:700;border:1px solid var(--line);background:var(--panel)}
+.qnav .main{background:var(--gold);color:#1b1505;border-color:var(--gold)}
+.score{font-family:var(--mono);font-size:54px;font-weight:800;margin:6px 0}
+.calc{margin-top:12px;max-width:900px}
+.calc .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:8px 0 12px}
+.calc label{font-size:12px;color:var(--mute);font-family:var(--mono);letter-spacing:.06em}
+.calc input{width:100%;margin-top:4px;padding:10px;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--text);font:inherit;font-size:16px}
+.calc .res{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.calc .res div{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+.calc .res span{display:block;font-size:11.5px;color:var(--mute);font-family:var(--mono)}
+.calc .res b{font-family:var(--mono);font-size:18px}
+.bigtiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px;margin-top:18px}
+.big{position:relative;overflow:hidden;text-align:left;background:linear-gradient(160deg,var(--card),#0a0f15);border:1px solid var(--line);border-radius:18px;padding:18px 18px 16px;min-height:168px;display:flex;flex-direction:column;transition:transform .15s,border-color .15s}
+.big:hover{transform:translateY(-2px);border-color:var(--acc)}
+.big::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--acc)}
+.big::after{content:"";position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,var(--glow),transparent 70%)}
+.big .bi{position:absolute;right:14px;top:16px;opacity:.95}
+.big h2{font-family:var(--mono);font-weight:800;font-size:clamp(17px,1.6vw + 6px,21px);letter-spacing:.03em;text-transform:uppercase;margin:0 70px 8px 0;line-height:1.2;color:var(--acc)}
+.big p{margin:0 0 14px;color:#b9c4d2;font-size:14.5px;line-height:1.45;max-width:85%}
+.big .ft{margin-top:auto;display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11.5px;color:var(--mute)}
+.big .pb{flex:1;height:5px;background:var(--line);border-radius:9px;overflow:hidden}.big .pb i{display:block;height:100%;background:var(--acc)}
+.big .go{color:var(--acc);font-size:16px;font-weight:800}
+.lcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-top:16px}
+.lc{display:flex;align-items:center;gap:12px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.lc:hover{border-color:var(--acc)}
+.lc .ic{width:48px;height:48px;flex:none;border-radius:10px;background:var(--panel);border:1px solid var(--line);display:grid;place-items:center}
+.lc small{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--mute)}
+.lc b{display:block;font-size:16px;margin:2px 0}
+.lc span{display:block;font-size:13px;color:var(--mute)}
+.lc .ok{margin-left:auto;color:var(--up);font-size:18px}
+.start{margin-top:16px;background:var(--up);color:#03140d;border:0;border-radius:12px;padding:13px 20px;font-weight:800;font-size:15px}
+@media (max-width:860px){
+  main{grid-template-columns:1fr}
+  #nav{position:static;height:auto;border-right:0;padding:12px 14px 40px}
+  #view{padding:14px 12px 50px}
+  #nav{display:none}
+  .bar{width:70px}
+}
+</style>
+</head>
+<body>
+<header>
+  <svg class="logo" viewBox="0 0 34 34"><rect width="34" height="34" rx="8" fill="#0f1620"/><line x1="10" y1="6" x2="10" y2="27" stroke="#f0605d" stroke-width="2"/><rect x="6.5" y="11" width="7" height="10" fill="#f0605d" rx="1"/><line x1="23" y1="5" x2="23" y2="29" stroke="#1fcf8f" stroke-width="2"/><rect x="19.5" y="9" width="7" height="14" fill="#1fcf8f" rx="1"/></svg>
+  <div class="brand" style="cursor:pointer" onclick="location.hash=''">CHART-SCHULE<small>BAYAZIT · CHARTS VERSTEHEN</small></div>
+  <div class="prog"><span id="progtxt">0 / 0</span><div class="bar"><i id="progbar"></i></div></div>
+</header>
+<main>
+  <nav id="nav">
+    <input id="search" placeholder="Lektion suchen … z. B. Hammer" autocomplete="off">
+    <div id="list"></div>
+  </nav>
+  <section id="view"></section>
+</main>
+<script>
+"use strict";
+/* ============ Farben & Helfer ============ */
+const C={bg:'#020407',grid:'#111a24',axis:'#6f7b8c',up:'#1fcf8f',down:'#f0605d',text:'#e6ecf3',gold:'#f5c542',blue:'#4c9aff',purple:'#b388ff',orange:'#ff9f43',mute:'#7f8b9c'};
+const MONO="'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace";
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const ease=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;
+const fmt=(p,dig=1)=>p.toFixed(dig).replace('.',',');
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+function hexA(hex,a){const n=parseInt(hex.slice(1),16);return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`;}
+
+/* Kerzen aus Eckpunkten erzeugen */
+function build(keys,opt={}){
+  const n=keys[keys.length-1][0]+1,r=rng(opt.seed||11),noise=opt.noise??0.5,wick=opt.wick??0.7,set=opt.set||{};
+  const keyIdx=new Set(keys.map(k=>k[0])),cl=[];
+  for(let i=0;i<n;i++){
+    let k=0;while(k<keys.length-2&&keys[k+1][0]<=i)k++;
+    const a=keys[k],b=keys[k+1];
+    let v=b[0]===a[0]?a[1]:a[1]+(b[1]-a[1])*(i-a[0])/(b[0]-a[0]);
+    if(!keyIdx.has(i))v+=(r()-.5)*2*noise;
+    if(set[i])v=set[i].c;
+    cl.push(v);
+  }
+  const d=[];
+  for(let i=0;i<n;i++){
+    const s=set[i]||{};
+    const o=s.o!=null?s.o:(i?cl[i-1]:cl[0]-(r()-.3)*noise*2),c=cl[i],body=Math.abs(c-o);
+    const h=s.h!=null?s.h:Math.max(o,c)+r()*wick*(.4+body*.15);
+    const l=s.l!=null?s.l:Math.min(o,c)-r()*wick*(.4+body*.15);
+    const vol=(30+r()*25+body*6)*((opt.vol&&opt.vol[i])||1);
+    d.push({o,h,l,c,v:vol});
+  }
+  return d;
+}
+const smaCalc=(d,n)=>d.map((_,i)=>i<n-1?null:d.slice(i-n+1,i+1).reduce((s,c)=>s+c.c,0)/n);
+function rsiCalc(d,n=14){const out=Array(d.length).fill(null);let g=0,l=0;
+  for(let i=1;i<d.length;i++){const ch=d[i].c-d[i-1].c,up=Math.max(ch,0),dn=Math.max(-ch,0);
+    if(i<=n){g+=up;l+=dn;if(i===n){g/=n;l/=n;out[i]=l===0?100:100-100/(1+g/l);}}
+    else{g=(g*(n-1)+up)/n;l=(l*(n-1)+dn)/n;out[i]=l===0?100:100-100/(1+g/l);}}
+  return out;}
+
+/* ============ Lektionen ============ */
+const CATS={basis:'Grundlagen',kerzen:'Kerzenmuster',formation:'Chartformationen',tools:'Indikatoren & Werkzeuge',risiko:'Risiko & Praxis'};
+const LESSONS=[];
+const add=o=>LESSONS.push(o);
+const hiR=(d,a,b)=>Math.max(...d.slice(a,b+1).map(c=>c.h)), loR=(d,a,b)=>Math.min(...d.slice(a,b+1).map(c=>c.l));
+
+/* ---- GRUNDLAGEN ---- */
+add({id:'kerze',cat:'basis',title:'Die Kerze',sub:'Aufbau einer Kerze: Körper, Docht, Hoch, Tief',icon:'anat',custom:'anatomy',
+ lead:'Jede Kerze erzählt, was der Preis in einem bestimmten Zeitraum gemacht hat – zum Beispiel in einer Stunde. Schau zu, wie eine Kerze live entsteht.',
+ steps:[
+  {at:0,text:'Eine Kerze fasst einen Zeitraum zusammen – hier eine Stunde: von 10:00 bis 11:00 Uhr.'},
+  {at:900,text:'10:00 Uhr: Der erste Preis ist die ERÖFFNUNG. Der weiße Punkt ist der aktuelle Preis – er schwankt hoch und runter …'},
+  {at:7200,text:'11:00 Uhr: Die Stunde ist vorbei. Der letzte Preis ist der SCHLUSS. Der höchste Preis ist das HOCH, der tiefste das TIEF.'},
+  {at:9300,text:'Der dicke Teil ist der KÖRPER (von Eröffnung bis Schluss). Die dünnen Linien heißen DOCHT oder Schatten.'},
+  {at:11300,text:'Schluss über Eröffnung → GRÜNE Kerze (bullisch): Die Käufer haben gewonnen.'},
+  {at:13300,text:'Nächste Stunde (11:00–12:00): Diesmal fällt der Kurs …'},
+  {at:19600,text:'Schluss unter Eröffnung → ROTE Kerze (bärisch). Achtung: Bei Rot ist die Eröffnung OBEN und der Schluss UNTEN!'}
+ ],total:24500,
+ box:{was:'Die Kerze (Candlestick) zeigt vier Preise eines Zeitraums: Eröffnung, Hoch, Tief und Schluss – kurz OHLC (Open, High, Low, Close).',
+  erkennen:['Grün: Schluss liegt über der Eröffnung (Kurs gestiegen)','Rot: Schluss liegt unter der Eröffnung (Kurs gefallen)','Körper = Eröffnung bis Schluss, Dochte = Ausreißer bis Hoch und Tief'],
+  bedeutung:'Großer Körper = eine Seite hatte klar die Kontrolle. Lange Dochte = der Preis wurde an dieser Stelle stark zurückgewiesen.',
+  tipp:'Jede Zeiteinheit hat eigene Kerzen: 1 Minute, 1 Stunde, 1 Tag … Eine Tageskerze besteht aus 24 Stundenkerzen.'}});
+
+add({id:'trend',cat:'basis',title:'Trend erkennen',sub:'Höhere Hochs und höhere Tiefs',icon:'trend',
+ make(){const d=build([[0,100],[6,110],[10,104],[16,116],[20,109],[26,123],[30,115],[36,130]],{seed:3,noise:.45});
+  const H=i=>d[i].h,L=i=>d[i].l;
+  return{data:d,steps:[
+   {to:7,text:'Der Kurs steigt bis zu einem ersten Hoch.',ov:[{t:'mark',i:6,p:H(6),text:'H',col:C.up}]},
+   {to:11,text:'Dann ein Rücksetzer – es entsteht ein Tief.',ov:[{t:'mark',i:10,p:L(10),text:'T',col:C.down,pos:'below'}]},
+   {to:21,text:'Das nächste Hoch ist HÖHER (HH) und auch das nächste Tief ist HÖHER (HT).',ov:[{t:'mark',i:16,p:H(16),text:'HH',col:C.up},{t:'mark',i:20,p:L(20),text:'HT',col:C.gold,pos:'below'}]},
+   {to:37,text:'Eine Treppe aus höheren Hochs und höheren Tiefs = AUFWÄRTSTREND.',ov:[{t:'mark',i:26,p:H(26),text:'HH',col:C.up},{t:'mark',i:30,p:L(30),text:'HT',col:C.gold,pos:'below'},
+     {t:'path',pts:[[0,d[0].l],[6,H(6)],[10,L(10)],[16,H(16)],[20,L(20)],[26,H(26)],[30,L(30)],[36,H(36)]],col:C.blue}],hold:600}]};},
+ box:{was:'Ein Trend ist die Hauptrichtung des Kurses. Es gibt Aufwärtstrend, Abwärtstrend und Seitwärtsphase.',
+  erkennen:['Aufwärtstrend: höhere Hochs (HH) und höhere Tiefs (HT)','Abwärtstrend: tiefere Hochs und tiefere Tiefs','Seitwärts: Hochs und Tiefs etwa auf gleicher Höhe'],
+  bedeutung:'„The trend is your friend“: Trades in Trendrichtung haben meist bessere Chancen als Trades dagegen.',
+  tipp:'Der Trend ist erst gebrochen, wenn ein höheres Tief unterschritten wird – nicht bei jeder roten Kerze.'}});
+
+add({id:'unterstuetzung',cat:'basis',title:'Unterstützung & Widerstand',sub:'Preiszonen, an denen der Kurs abprallt',icon:'sr',
+ make(){const d=build([[0,105],[4,110],[9,100],[14,110],[19,100.5],[24,109.8],[29,101],[34,112],[38,118]],{seed:5,noise:.4,wick:.5});
+  return{data:d,steps:[
+   {to:15,text:'Der Kurs prallt mehrmals an denselben Preisen ab.'},
+   {text:'Oben bremst der WIDERSTAND: Hier verkaufen viele Marktteilnehmer.',ov:[{t:'h',p:110,col:C.down,label:'WIDERSTAND',to:38}]},
+   {text:'Unten hält die UNTERSTÜTZUNG: Hier kaufen viele.',ov:[{t:'h',p:100,col:C.up,label:'UNTERSTÜTZUNG',to:38}]},
+   {to:30,text:'Je öfter eine Zone hält, desto wichtiger wird sie.',ov:[{t:'label',i:19,p:d[19].l,text:'3. Test',col:C.up,pos:'below'},{t:'label',i:24,p:d[24].h,text:'3. Test',col:C.down}]},
+   {to:39,text:'Ausbruch über den Widerstand → oft beginnt jetzt eine neue Bewegung.',ov:[{t:'label',i:35,p:d[35].h,text:'AUSBRUCH ▲',col:C.gold}],hold:600}]};},
+ box:{was:'Unterstützung ist ein Preisbereich, an dem Käufer stark sind. Widerstand ist ein Bereich, an dem Verkäufer stark sind.',
+  erkennen:['Mindestens zwei Berührungen auf ähnlicher Höhe','Gerne an runden Zahlen (100, 50.000 …)','Alte Hochs und Tiefs sind oft spätere Zonen'],
+  bedeutung:'Zonen zeigen, wo eine Reaktion wahrscheinlich ist. Bricht eine Zone, kommt oft eine schnelle Bewegung.',
+  tipp:'Denke in ZONEN statt in exakten Linien – der Kurs trifft selten genau auf den Cent.'}});
+
+add({id:'trendlinie',cat:'basis',title:'Trendlinie',sub:'Tiefs verbinden und den Bruch erkennen',icon:'tl',
+ make(){const d=build([[0,100],[6,110],[10,104],[16,116],[20,109],[26,121],[30,114],[35,125],[38,118.5],[40,113],[46,106]],{seed:9,noise:.4,wick:.5});
+  const a=[10,d[10].l],b=[20,d[20].l],sl=(b[1]-a[1])/10;
+  return{data:d,steps:[
+   {to:21,text:'Ein Aufwärtstrend mit zwei klaren Tiefs.'},
+   {text:'Wir verbinden die Tiefs – das ist die TRENDLINIE.',ov:[{t:'line',a,b,ext:26,col:C.gold,label:'TRENDLINIE'}]},
+   {to:31,text:'Der dritte Test bestätigt die Linie. Hier steigen viele Trader ein.',ov:[{t:'label',i:30,p:a[1]+sl*20,text:'3. Berührung',col:C.up,pos:'below'}]},
+   {to:47,text:'Der Kurs bricht unter die Linie: Der Aufwärtstrend ist in Gefahr!',ov:[{t:'label',i:41,p:d[41].l,text:'BRUCH ▼',col:C.down,pos:'below'}],hold:600}]};},
+ box:{was:'Eine Trendlinie verbindet mindestens zwei Tiefs (Aufwärtstrend) oder zwei Hochs (Abwärtstrend).',
+  erkennen:['Zwei Punkte zeichnen die Linie, der dritte bestätigt sie','Je flacher, desto stabiler – sehr steile Linien brechen schnell','Dochte dürfen die Linie leicht durchstechen'],
+  bedeutung:'Solange der Kurs über der Linie bleibt, ist der Trend intakt. Ein Schlusskurs darunter ist ein Warnsignal.',
+  tipp:'Warte beim Bruch auf den SCHLUSS der Kerze – ein Docht unter der Linie allein ist noch kein Bruch.'}});
+
+add({id:'kanal',cat:'basis',title:'Trendkanal',sub:'Zwei parallele Linien',icon:'kanal',
+ make(){const d=build([[0,100],[5,113],[10,106],[15,119],[20,112],[25,125],[30,118],[35,131]],{seed:21,noise:.35,wick:.45});
+  return{data:d,steps:[
+   {to:16,text:'Der Kurs steigt sehr gleichmäßig – Hochs und Tiefs haben fast denselben Abstand.'},
+   {text:'Untere Linie: Verbindung der Tiefs.',ov:[{t:'line',a:[0,100],b:[10,106],ext:25,col:C.up,label:'UNTEN'}]},
+   {text:'Obere Linie: parallel durch die Hochs. Fertig ist der TRENDKANAL.',ov:[{t:'line',a:[5,113],b:[15,119],ext:20,col:C.down,label:'OBEN'}]},
+   {to:36,text:'Unten wird gekauft, oben werden Gewinne mitgenommen – solange der Kanal hält.',ov:[{t:'label',i:20,p:d[20].l,text:'Kaufzone',col:C.up,pos:'below'},{t:'label',i:25,p:d[25].h,text:'Gewinne',col:C.down}],hold:600}]};},
+ box:{was:'Ein Trendkanal besteht aus der Trendlinie und einer parallelen Linie auf der anderen Seite.',
+  erkennen:['Mindestens zwei Berührungen an jeder Linie','Beide Linien laufen parallel','Gibt es steigend, fallend und seitwärts'],
+  bedeutung:'Der Kanal zeigt, wie weit der Kurs typischerweise schwingt – gut für Ziele und Stopps.',
+  tipp:'Schafft der Kurs die obere Linie nicht mehr, wird der Trend oft schwächer.'}});
+
+add({id:'retest',cat:'basis',title:'Ausbruch & Retest',sub:'Aus Widerstand wird Unterstützung',icon:'retest',
+ make(){const d=build([[0,102],[5,110],[10,103],[15,110],[19,104],[24,116],[28,110.4],[34,122]],{seed:13,noise:.4,wick:.5});
+  return{data:d,steps:[
+   {to:20,text:'Zweimal scheitert der Kurs an derselben Stelle.',ov:[{t:'h',p:110,col:C.down,label:'WIDERSTAND',to:33}]},
+   {to:25,text:'Ausbruch! Der Kurs schließt klar über dem Widerstand.',ov:[{t:'label',i:22,p:d[22].h,text:'AUSBRUCH',col:C.gold}]},
+   {to:29,text:'Der Kurs kommt zurück und testet die alte Linie von oben: der RETEST.',ov:[{t:'zone',i1:27,i2:29,col:C.up,label:'RETEST ✓',below:true}]},
+   {to:35,text:'Die Linie hält: Der alte Widerstand ist jetzt UNTERSTÜTZUNG (Rollentausch).',ov:[{t:'h',p:110,col:C.up,from:22,to:33,dash:true}],hold:600}]};},
+ box:{was:'Nach einem Ausbruch kehrt der Kurs oft zur gebrochenen Linie zurück und testet sie von der anderen Seite.',
+  erkennen:['Klarer Ausbruch mit Schlusskurs über der Zone','Rücklauf an die alte Zone','Reaktion (z. B. Hammer) an der Zone'],
+  bedeutung:'Ein erfolgreicher Retest bestätigt den Ausbruch – viele nutzen ihn als sichereren Einstieg.',
+  tipp:'Nicht jeder Ausbruch hat einen Retest. Wer nur auf den Retest wartet, verpasst manchmal die Bewegung.'}});
+
+/* ---- KERZENMUSTER ---- */
+add({id:'doji',cat:'kerzen',title:'Doji',sub:'Unentschlossenheit im Markt',icon:'doji',
+ make(){const d=build([[0,121],[12,101.5],[13,101.6],[20,112]],{seed:4,noise:.5,set:{13:{o:101.5,c:101.6,h:104.6,l:98.4}}});
+  return{data:d,steps:[
+   {to:13,text:'Der Kurs fällt seit einiger Zeit – die Verkäufer haben die Kontrolle.'},
+   {to:14,text:'Jetzt ein DOJI: Eröffnung und Schluss sind fast gleich. Käufer und Verkäufer sind im Gleichgewicht.',ov:[{t:'zone',i1:13,i2:13,col:C.gold,label:'DOJI'}]},
+   {to:15,text:'Wichtig: Erst die nächste Kerze bestätigt die Richtung. Hier: grün.',ov:[{t:'label',i:14,p:d[14].l,text:'Bestätigung',col:C.up,pos:'below'}]},
+   {to:21,text:'Die Unentschlossenheit war hier der Wendepunkt.',hold:600}]};},
+ box:{was:'Ein Doji hat (fast) keinen Körper – Eröffnung und Schluss liegen auf gleicher Höhe.',
+  erkennen:['Sehr kleiner oder kein Körper','Dochte oben und unten','Am aussagekräftigsten nach einem klaren Trend'],
+  bedeutung:'Der Markt ist unentschlossen. Nach einem Trend kann das eine Wende ankündigen.',
+  tipp:'Ein Doji allein ist kein Signal – warte immer auf die Bestätigung der nächsten Kerze.'}});
+
+add({id:'hammer',cat:'kerzen',title:'Hammer',sub:'Langer unterer Docht nach einem Fall',icon:'hammer',
+ make(){const d=build([[0,118],[12,103],[13,104.5],[20,113]],{seed:6,noise:.5,set:{13:{o:103,c:104.5,h:104.8,l:97}}});
+  return{data:d,steps:[
+   {to:13,text:'Abwärtstrend: Der Kurs fällt Kerze für Kerze.'},
+   {to:14,text:'Der HAMMER: Der Kurs fällt stark, aber die Käufer holen ihn bis zum Schluss fast ganz zurück.',ov:[{t:'zone',i1:13,i2:13,col:C.up,label:'HAMMER'},{t:'label',i:13,p:97,text:'langer Docht',col:C.gold,pos:'below'}]},
+   {to:15,text:'Die nächste Kerze schließt höher – das ist die Bestätigung.',ov:[{t:'label',i:15,p:d[15].h,text:'Bestätigung',col:C.up}]},
+   {to:21,text:'Die Käufer übernehmen – der Trend dreht nach oben.',hold:600}]};},
+ box:{was:'Ein Hammer ist eine Kerze mit kleinem Körper oben und einem langen unteren Docht – nach einem Abwärtstrend.',
+  erkennen:['Unterer Docht mindestens 2× so lang wie der Körper','Kaum oberer Docht','Tritt nach einem Fall auf, gerne an einer Unterstützung'],
+  bedeutung:'Verkäufer haben gedrückt, Käufer haben alles zurückgeholt: Ablehnung tieferer Preise.',
+  tipp:'Die Farbe des Hammers ist zweitrangig. Wichtiger sind der Ort (Unterstützung!) und die Bestätigung.'}});
+
+add({id:'shootingstar',cat:'kerzen',title:'Shooting Star',sub:'Langer oberer Docht nach einem Anstieg',icon:'star',
+ make(){const d=build([[0,100],[12,116],[13,115.3],[20,105]],{seed:8,noise:.5,set:{13:{o:116,c:115.3,h:122.5,l:115}}});
+  return{data:d,steps:[
+   {to:13,text:'Aufwärtstrend: Der Kurs steigt.'},
+   {to:14,text:'SHOOTING STAR: Der Kurs schießt hoch, fällt aber bis zum Schluss wieder zurück.',ov:[{t:'zone',i1:13,i2:13,col:C.down,label:'SHOOTING STAR'}]},
+   {to:15,text:'Die nächste Kerze ist rot – Bestätigung.',ov:[{t:'label',i:15,p:d[15].l,text:'Bestätigung',col:C.down,pos:'below'}]},
+   {to:21,text:'Die Verkäufer übernehmen – der Kurs fällt.',hold:600}]};},
+ box:{was:'Das Gegenstück zum Hammer: kleiner Körper unten und ein langer oberer Docht – nach einem Anstieg.',
+  erkennen:['Oberer Docht mindestens 2× so lang wie der Körper','Kaum unterer Docht','Tritt nach einem Anstieg auf, gerne an einem Widerstand'],
+  bedeutung:'Höhere Preise wurden klar abgelehnt – die Käufer werden schwächer.',
+  tipp:'Die gleiche Form nach einem Fall heißt „umgekehrter Hammer“ und kann bullisch sein.'}});
+
+add({id:'engulfing-bull',cat:'kerzen',title:'Bullisches Engulfing',sub:'Grüne Kerze „verschluckt“ die rote',icon:'engbull',
+ make(){const d=build([[0,118],[11,104],[12,102],[13,106],[20,114]],{seed:10,noise:.5,set:{12:{o:104,c:102,h:104.4,l:101.6},13:{o:101.7,c:106,h:106.4,l:101.2}}});
+  return{data:d,steps:[
+   {to:12,text:'Der Kurs fällt.'},
+   {to:13,text:'Noch eine kleine rote Kerze …',ov:[{t:'zone',i1:12,i2:12,col:C.down,label:'klein'}]},
+   {to:14,text:'… dann eine große grüne Kerze, deren Körper den roten Körper komplett umschließt: BULLISCHES ENGULFING.',ov:[{t:'zone',i1:12,i2:13,col:C.up,label:'ENGULFING',below:true}]},
+   {to:21,text:'Die Käufer haben die Kontrolle übernommen.',hold:600}]};},
+ box:{was:'Ein Zwei-Kerzen-Muster: Eine große grüne Kerze umschließt den Körper der vorherigen roten Kerze komplett.',
+  erkennen:['Vorher ein Abwärtstrend','Kerze 1 rot, Kerze 2 grün','Körper 2 ist größer und umschließt Körper 1'],
+  bedeutung:'Starker Stimmungswechsel: Alles, was die Verkäufer geschafft haben, wird in einer Kerze zurückgeholt.',
+  tipp:'Je größer die grüne Kerze im Vergleich, desto stärker das Signal.'}});
+
+add({id:'engulfing-bear',cat:'kerzen',title:'Bärisches Engulfing',sub:'Rote Kerze „verschluckt“ die grüne',icon:'engbear',
+ make(){const d=build([[0,100],[11,114],[12,116],[13,112],[20,104]],{seed:12,noise:.5,set:{12:{o:114,c:116,h:116.4,l:113.6},13:{o:116.3,c:112,h:116.8,l:111.6}}});
+  return{data:d,steps:[
+   {to:12,text:'Der Kurs steigt.'},
+   {to:13,text:'Noch eine kleine grüne Kerze …',ov:[{t:'zone',i1:12,i2:12,col:C.up,label:'klein'}]},
+   {to:14,text:'… dann umschließt eine große rote Kerze den grünen Körper: BÄRISCHES ENGULFING.',ov:[{t:'zone',i1:12,i2:13,col:C.down,label:'ENGULFING',below:true}]},
+   {to:21,text:'Die Verkäufer übernehmen – der Kurs fällt.',hold:600}]};},
+ box:{was:'Das Gegenteil des bullischen Engulfings – nach einem Anstieg umschließt eine große rote Kerze die grüne.',
+  erkennen:['Vorher ein Aufwärtstrend','Kerze 1 grün, Kerze 2 rot','Körper 2 umschließt Körper 1'],
+  bedeutung:'Die Käufer verlieren schlagartig die Kontrolle.',
+  tipp:'Besonders stark direkt an einem Widerstand oder einem alten Hoch.'}});
+
+add({id:'morningstar',cat:'kerzen',title:'Morning Star',sub:'Drei-Kerzen-Wende nach oben',icon:'morning',
+ make(){const d=build([[0,120],[10,111],[11,104],[12,103.6],[13,109],[20,116]],{seed:14,noise:.5,set:{11:{o:111,c:104,h:111.4,l:103.6},12:{o:103.3,c:103.6,h:104.6,l:102.2},13:{o:104,c:109,h:109.4,l:103.8}}});
+  return{data:d,steps:[
+   {to:12,text:'Kerze 1: eine große rote Kerze – die Verkäufer sind stark.'},
+   {to:13,text:'Kerze 2: ein kleiner Körper – der Verkaufsdruck lässt nach (der „Stern“).',ov:[{t:'label',i:12,p:d[12].l,text:'2 Stern',col:C.gold,pos:'below'}]},
+   {to:14,text:'Kerze 3: eine große grüne Kerze, die weit in Kerze 1 hineinläuft. Das ist der MORNING STAR.',ov:[{t:'zone',i1:11,i2:13,col:C.up,label:'MORNING STAR'}]},
+   {to:21,text:'Die Nacht ist vorbei – der Kurs steigt.',hold:600}]};},
+ box:{was:'Ein Drei-Kerzen-Muster am Ende eines Abwärtstrends: groß rot – klein – groß grün.',
+  erkennen:['Kerze 1: große rote Kerze','Kerze 2: kleiner Körper (oft ein Doji)','Kerze 3: große grüne Kerze, schließt über der Mitte von Kerze 1'],
+  bedeutung:'Der Wechsel von Verkäufern zu Käufern läuft in drei Schritten ab – das macht das Signal zuverlässig.',
+  tipp:'Wenn Kerze 2 ein Doji ist, spricht man vom „Morning Doji Star“.'}});
+
+add({id:'eveningstar',cat:'kerzen',title:'Evening Star',sub:'Drei-Kerzen-Wende nach unten',icon:'evening',
+ make(){const d=build([[0,100],[10,109],[11,116],[12,116.4],[13,111],[20,104]],{seed:16,noise:.5,set:{11:{o:109,c:116,h:116.4,l:108.6},12:{o:116.7,c:116.4,h:117.8,l:115.4},13:{o:116,c:111,h:116.2,l:110.6}}});
+  return{data:d,steps:[
+   {to:12,text:'Kerze 1: eine große grüne Kerze – die Käufer sind stark.'},
+   {to:13,text:'Kerze 2: ein kleiner Körper ganz oben – der Schwung ist weg.',ov:[{t:'label',i:12,p:d[12].h,text:'2 Stern',col:C.gold}]},
+   {to:14,text:'Kerze 3: eine große rote Kerze. Das ist der EVENING STAR.',ov:[{t:'zone',i1:11,i2:13,col:C.down,label:'EVENING STAR',below:true}]},
+   {to:21,text:'Der Abend bricht an – der Kurs fällt.',hold:600}]};},
+ box:{was:'Das Gegenstück zum Morning Star am Ende eines Aufwärtstrends: groß grün – klein – groß rot.',
+  erkennen:['Kerze 1: große grüne Kerze','Kerze 2: kleiner Körper oben','Kerze 3: große rote Kerze, schließt unter der Mitte von Kerze 1'],
+  bedeutung:'Die Käufer sind erschöpft, die Verkäufer übernehmen.',
+  tipp:'Steigendes Volumen bei Kerze 3 macht das Signal stärker.'}});
+
+add({id:'soldaten',cat:'kerzen',title:'Drei weiße Soldaten',sub:'Drei starke grüne Kerzen',icon:'soldaten',
+ make(){const d=build([[0,112],[8,103],[11,102],[12,106],[13,110],[14,114],[20,118]],{seed:18,noise:.5,set:{12:{o:102,c:106,h:106.3,l:101.7},13:{o:105.6,c:110,h:110.3,l:105.3},14:{o:109.6,c:114,h:114.4,l:109.3}}});
+  return{data:d,steps:[
+   {to:12,text:'Der Kurs fällt und läuft dann seitwärts.'},
+   {to:15,text:'Drei große grüne Kerzen hintereinander, jede schließt höher: DREI WEISSE SOLDATEN.',ov:[{t:'label',i:12,p:d[12].l,text:'1',col:C.up,pos:'below'},{t:'label',i:13,p:d[13].l,text:'2',col:C.up,pos:'below'},{t:'label',i:14,p:d[14].l,text:'3',col:C.up,pos:'below'},{t:'zone',i1:12,i2:14,col:C.up,label:'3 SOLDATEN'}]},
+   {to:21,text:'Ein klares Zeichen für starke Käufer – oft der Start eines neuen Trends.',hold:600}]};},
+ box:{was:'Drei aufeinanderfolgende große grüne Kerzen mit kleinen Dochten.',
+  erkennen:['Drei grüne Kerzen hintereinander','Jede eröffnet im Körper der vorherigen und schließt höher','Kleine obere Dochte'],
+  bedeutung:'Die Käufer drücken den Kurs konsequent nach oben – starkes Momentum.',
+  tipp:'Das Gegenteil (drei große rote Kerzen) heißt „Drei schwarze Krähen“.'}});
+
+/* ---- FORMATIONEN ---- */
+add({id:'sks',cat:'formation',title:'Schulter-Kopf-Schulter',sub:'Klassische Trendwende nach unten',icon:'sks',
+ make(){const d=build([[0,92],[6,110],[10,103],[17,118],[22,103],[28,110],[33,101],[36,103],[44,88]],{seed:22,noise:.45,wick:.5});
+  return{data:d,steps:[
+   {to:11,text:'Ein erstes Hoch – die LINKE SCHULTER.',ov:[{t:'label',i:6,p:d[6].h,text:'LINKE SCHULTER',col:C.gold}]},
+   {to:23,text:'Ein noch höheres Hoch – der KOPF. Danach fällt der Kurs zurück auf dieselbe Höhe.',ov:[{t:'label',i:17,p:d[17].h,text:'KOPF',col:C.gold}]},
+   {to:29,text:'Das nächste Hoch schafft es nicht mehr so hoch – die RECHTE SCHULTER.',ov:[{t:'label',i:28,p:d[28].h,text:'RECHTE SCHULTER',col:C.gold}]},
+   {text:'Die Tiefs dazwischen verbinden wir zur NACKENLINIE.',ov:[{t:'h',p:103,col:C.blue,label:'NACKENLINIE',from:8,to:44}]},
+   {to:37,text:'Bruch unter die Nackenlinie – oft mit einem Retest von unten. Das ist das Signal!',ov:[{t:'label',i:33,p:d[33].l,text:'BRUCH ▼',col:C.down,pos:'below'}]},
+   {to:45,text:'Kursziel: die Höhe vom Kopf bis zur Nackenlinie nach unten abtragen.',ov:[{t:'arrow',a:[17,118],b:[17,103],col:C.purple,label:'Höhe'},{t:'arrow',a:[38,103],b:[38,88],col:C.purple,label:'Ziel'}],hold:600}]};},
+ box:{was:'Eine der bekanntesten Umkehrformationen: drei Hochs, das mittlere (Kopf) ist das höchste.',
+  erkennen:['Linke Schulter, höherer Kopf, rechte Schulter','Nackenlinie durch die beiden Tiefs','Signal erst beim Bruch der Nackenlinie'],
+  bedeutung:'Die Käufer schaffen kein neues Hoch mehr – der Aufwärtstrend kippt.',
+  tipp:'Umgekehrt (auf dem Kopf) nach einem Abwärtstrend ist es ein bullisches Signal: inverse SKS.'}});
+
+add({id:'doppelboden',cat:'formation',title:'Doppelter Boden',sub:'Die „W“-Formation',icon:'w',
+ make(){const d=build([[0,115],[8,100],[13,108],[20,100.3],[26,108],[29,111],[32,108.5],[40,117]],{seed:24,noise:.4,wick:.5});
+  return{data:d,steps:[
+   {to:9,text:'Der Kurs fällt auf einen ersten Boden.',ov:[{t:'label',i:8,p:d[8].l,text:'BODEN 1',col:C.up,pos:'below'}]},
+   {to:21,text:'Erholung – und ein zweiter Test auf derselben Höhe. Der Boden hält!',ov:[{t:'label',i:20,p:d[20].l,text:'BODEN 2',col:C.up,pos:'below'}]},
+   {text:'Das Hoch dazwischen bildet die Nackenlinie.',ov:[{t:'h',p:108,col:C.blue,label:'NACKENLINIE',from:6,to:40}]},
+   {to:33,text:'Ausbruch über die Nackenlinie – das „W“ ist fertig.',ov:[{t:'label',i:29,p:d[29].h,text:'AUSBRUCH ▲',col:C.gold}]},
+   {to:41,text:'Kursziel: Höhe der Formation nach oben abtragen.',ov:[{t:'arrow',a:[14,100],b:[14,108],col:C.purple,label:'Höhe'},{t:'arrow',a:[34,108],b:[34,116],col:C.purple,label:'Ziel'}],hold:600}]};},
+ box:{was:'Zwei Tiefs auf ähnlicher Höhe mit einem Hoch dazwischen – sieht aus wie ein „W“.',
+  erkennen:['Zwei Tiefs auf etwa gleicher Höhe','Zwischenhoch = Nackenlinie','Bestätigung erst beim Ausbruch über die Nackenlinie'],
+  bedeutung:'Die Verkäufer schaffen kein tieferes Tief – der Abwärtstrend ist zu Ende.',
+  tipp:'Liegt Boden 2 leicht höher als Boden 1, ist das oft ein Zeichen von Stärke.'}});
+
+add({id:'doppeltop',cat:'formation',title:'Doppeltes Top',sub:'Die „M“-Formation',icon:'m',
+ make(){const d=build([[0,95],[8,110],[13,102],[20,109.8],[26,102],[29,99],[32,101.5],[40,93]],{seed:26,noise:.4,wick:.5});
+  return{data:d,steps:[
+   {to:9,text:'Der Kurs steigt auf ein erstes Hoch.',ov:[{t:'label',i:8,p:d[8].h,text:'TOP 1',col:C.down}]},
+   {to:21,text:'Rücksetzer – und ein zweiter Versuch auf derselben Höhe. Er scheitert!',ov:[{t:'label',i:20,p:d[20].h,text:'TOP 2',col:C.down}]},
+   {text:'Das Tief dazwischen ist die Nackenlinie.',ov:[{t:'h',p:102,col:C.blue,label:'NACKENLINIE',from:6,to:40}]},
+   {to:33,text:'Bruch nach unten – das „M“ ist fertig.',ov:[{t:'label',i:29,p:d[29].l,text:'BRUCH ▼',col:C.down,pos:'below'}]},
+   {to:41,text:'Kursziel: Höhe der Formation nach unten abtragen.',ov:[{t:'arrow',a:[14,110],b:[14,102],col:C.purple,label:'Höhe'},{t:'arrow',a:[34,102],b:[34,94],col:C.purple,label:'Ziel'}],hold:600}]};},
+ box:{was:'Zwei Hochs auf ähnlicher Höhe mit einem Tief dazwischen – sieht aus wie ein „M“.',
+  erkennen:['Zwei Hochs auf etwa gleicher Höhe','Zwischentief = Nackenlinie','Signal erst beim Bruch der Nackenlinie'],
+  bedeutung:'Die Käufer schaffen kein höheres Hoch – der Aufwärtstrend kippt.',
+  tipp:'Ohne Bruch der Nackenlinie ist es nur eine Seitwärtsphase – nicht zu früh handeln.'}});
+
+add({id:'dreieck',cat:'formation',title:'Aufsteigendes Dreieck',sub:'Flacher Deckel, steigende Tiefs',icon:'dreieck',
+ make(){const d=build([[0,98],[5,110],[10,101],[15,110],[19,104],[23,110],[26,106.5],[29,111],[34,118]],{seed:28,noise:.35,wick:.45});
+  return{data:d,steps:[
+   {to:16,text:'Der Kurs scheitert immer wieder an derselben Höhe.'},
+   {text:'Oben: ein flacher Widerstand.',ov:[{t:'h',p:110,col:C.down,label:'WIDERSTAND',from:3,to:30}]},
+   {to:27,text:'Aber die Tiefs werden immer höher – die Käufer werden ungeduldig.',ov:[{t:'line',a:[10,d[10].l],b:[26,d[26].l],ext:4,col:C.up,label:'STEIGENDE TIEFS'}]},
+   {to:35,text:'Der Druck wird zu groß: AUSBRUCH nach oben!',ov:[{t:'label',i:29,p:d[29].h,text:'AUSBRUCH ▲',col:C.gold},{t:'arrow',a:[11,101],b:[11,110],col:C.purple,label:'Höhe'},{t:'arrow',a:[31,110],b:[31,119],col:C.purple,label:'Ziel'}],hold:600}]};},
+ box:{was:'Eine Dreiecksformation mit waagerechtem Widerstand und steigender Unterstützung.',
+  erkennen:['Mindestens zwei Hochs auf gleicher Höhe','Mindestens zwei steigende Tiefs','Der Kurs wird immer enger zusammengedrückt'],
+  bedeutung:'Meist bullisch: Die Käufer kaufen immer früher, bis der Widerstand bricht.',
+  tipp:'Das Gegenstück (flacher Boden, fallende Hochs) heißt absteigendes Dreieck und ist meist bärisch.'}});
+
+add({id:'flagge',cat:'formation',title:'Bullische Flagge',sub:'Kurze Pause im starken Trend',icon:'flagge',
+ make(){const d=build([[0,100],[6,101],[12,118],[14,117],[16,114.5],[18,116],[20,113],[22,114.5],[24,112],[26,113.5],[29,121],[35,132]],{seed:30,noise:.35,wick:.45});
+  return{data:d,steps:[
+   {to:13,text:'Ein starker, schneller Anstieg – die FAHNENSTANGE.',ov:[{t:'arrow',a:[6,101],b:[12,118],col:C.purple,label:'Stange'}]},
+   {to:27,text:'Danach eine kurze, leicht fallende Pause – die FLAGGE.',ov:[{t:'line',a:[14,117.6],b:[22,115.1],ext:4,col:C.gold},{t:'line',a:[16,114],b:[24,111.5],ext:2,col:C.gold,label:'FLAGGE'}]},
+   {to:30,text:'Ausbruch aus der Flagge – der Trend geht weiter.',ov:[{t:'mark',i:28,p:d[28].h,text:'▲',col:C.up}]},
+   {to:36,text:'Kursziel: Länge der Fahnenstange ab dem Ausbruch.',ov:[{t:'arrow',a:[30,115],b:[30,132],col:C.purple,label:'Ziel'}],hold:600}]};},
+ box:{was:'Eine Fortsetzungsformation: starker Anstieg (Stange), dann eine kleine Konsolidierung gegen den Trend (Flagge).',
+  erkennen:['Steiler Anstieg vorher','Kleiner, leicht fallender Kanal','Ausbruch in Trendrichtung'],
+  bedeutung:'Der Markt verschnauft nur kurz – danach geht der Trend weiter.',
+  tipp:'Die Flagge sollte nicht mehr als etwa die Hälfte der Stange zurücklaufen.'}});
+
+add({id:'keil',cat:'formation',title:'Fallender Keil',sub:'Zusammenlaufende Linien',icon:'keil',
+ make(){const d=build([[0,120],[4,112],[8,115],[12,108.8],[16,110],[20,105.6],[23,109],[30,118]],{seed:32,noise:.3,wick:.4});
+  return{data:d,steps:[
+   {to:21,text:'Der Kurs fällt – aber jede Welle nach unten wird kleiner.'},
+   {text:'Die Hochs fallen steil …',ov:[{t:'line',a:[0,120.4],b:[16,110.4],ext:6,col:C.down}]},
+   {text:'… die Tiefs fallen flacher. Die Linien laufen zusammen: FALLENDER KEIL.',ov:[{t:'line',a:[4,111.6],b:[20,105.2],ext:4,col:C.up,label:'KEIL'}]},
+   {to:31,text:'Die Verkäufer verlieren die Kraft – Ausbruch nach oben!',ov:[{t:'label',i:23,p:d[23].h,text:'AUSBRUCH ▲',col:C.gold}],hold:600}]};},
+ box:{was:'Zwei fallende Linien, die zusammenlaufen. Die obere fällt steiler als die untere.',
+  erkennen:['Fallende Hochs und fallende Tiefs','Die Abstände werden kleiner','Meist Ausbruch nach oben'],
+  bedeutung:'Der Abwärtsdruck lässt nach – oft eine bullische Wende.',
+  tipp:'Der steigende Keil (beide Linien steigen, laufen zusammen) ist das bärische Gegenstück.'}});
+
+/* ---- INDIKATOREN ---- */
+add({id:'fibonacci',cat:'tools',title:'Fibonacci & Golden Zone',sub:'Wo endet ein Rücksetzer?',icon:'fib',
+ make(){const d=build([[0,100],[18,130],[26,113.5],[29,116],[31,112.6],[40,138]],{seed:34,noise:.6,wick:.5});
+  const lo=loR(d,0,3),hi=hiR(d,16,19);
+  return{data:d,steps:[
+   {to:19,text:'Ein starker Anstieg (Impuls) vom Tief zum Hoch.'},
+   {text:'Wir ziehen Fibonacci vom TIEF zum HOCH. Die Linien zeigen typische Rücksetzer-Zonen.',ov:[{t:'fib',i1:0,p1:lo,i2:18,p2:hi}]},
+   {to:32,text:'Der Rücksetzer läuft genau in die GOLDEN ZONE (0,5 – 0,618) und dreht dort.',ov:[{t:'label',i:31,p:d[31].l,text:'Reaktion',col:C.up,pos:'below'}]},
+   {to:41,text:'Der Trend geht weiter. Die Golden Zone ist eine beliebte Einstiegszone für Trendfolger.',hold:600}]};},
+ box:{was:'Fibonacci-Retracements teilen eine Bewegung in Prozent-Stufen: 23,6 %, 38,2 %, 50 %, 61,8 % und 78,6 %.',
+  erkennen:['Im Aufwärtstrend vom Tief zum Hoch ziehen','Im Abwärtstrend vom Hoch zum Tief','Golden Zone = Bereich zwischen 0,5 und 0,618'],
+  bedeutung:'Viele Trader warten an diesen Stufen auf Einstiege – deshalb reagiert der Kurs dort oft.',
+  tipp:'Fibonacci wirkt am besten zusammen mit anderen Zonen (Unterstützung, Trendlinie, alte Hochs).'}});
+
+add({id:'gleitende',cat:'tools',title:'Gleitende Durchschnitte',sub:'MA und Golden Cross',icon:'ma',
+ make(){const d=build([[0,120],[30,98],[45,100],[80,126]],{seed:36,noise:1.3,wick:.9});
+  return{data:d,steps:[
+   {to:40,text:'Der Kurs fällt erst und läuft dann seitwärts.'},
+   {text:'Der gelbe MA 10 ist der Durchschnitt der letzten 10 Schlusskurse – er reagiert schnell.',ov:[{t:'sma',n:10,col:C.gold,label:'MA 10'}]},
+   {text:'Der blaue MA 30 ist langsamer und zeigt den größeren Trend.',ov:[{t:'sma',n:30,col:C.blue,label:'MA 30'}]},
+   {to:81,text:'Der schnelle MA kreuzt den langsamen von unten nach oben: GOLDEN CROSS – ein Kaufsignal.',ov:[{t:'cross',f:10,s:30}],hold:600}]};},
+ box:{was:'Ein gleitender Durchschnitt (MA) glättet den Kurs: Er zeigt den Durchschnittspreis der letzten X Kerzen.',
+  erkennen:['Kurs über dem MA = eher Aufwärtstrend','Kurs unter dem MA = eher Abwärtstrend','Beliebt: MA 20, 50, 200 (EMA reagiert schneller)'],
+  bedeutung:'Golden Cross (schnell kreuzt langsam nach oben) = bullisch. Death Cross (nach unten) = bärisch.',
+  tipp:'MAs laufen dem Kurs hinterher. In Seitwärtsphasen gibt es viele Fehlsignale.'}});
+
+add({id:'rsi',cat:'tools',title:'RSI',sub:'Überkauft oder überverkauft?',icon:'rsi',panel:'rsi',
+ make(){const d=build([[0,100],[22,126],[26,123],[46,97],[54,101],[70,114]],{seed:38,noise:.9,wick:.8});
+  return{data:d,steps:[
+   {to:25,text:'Starker Anstieg: Der RSI (unten) steigt über 70 – der Markt ist ÜBERKAUFT.',ov:[{t:'label',i:22,p:d[22].h,text:'überkauft',col:C.down}]},
+   {to:47,text:'Starker Abverkauf: Der RSI fällt unter 30 – ÜBERVERKAUFT.',ov:[{t:'label',i:46,p:d[46].l,text:'überverkauft',col:C.up,pos:'below'}]},
+   {to:71,text:'Danach die Erholung. Achtung: In starken Trends kann der RSI lange überkauft bleiben!',hold:600}]};},
+ box:{was:'Der RSI (Relative-Stärke-Index) misst die Stärke der letzten Bewegungen – auf einer Skala von 0 bis 100.',
+  erkennen:['Über 70 = überkauft (Kurs ist schnell gestiegen)','Unter 30 = überverkauft (Kurs ist schnell gefallen)','Standard-Einstellung: 14 Kerzen'],
+  bedeutung:'Extreme zeigen, dass eine Bewegung „heiß gelaufen“ ist – eine Pause oder Gegenbewegung wird wahrscheinlicher.',
+  tipp:'Stark ist eine Divergenz: Kurs macht ein neues Hoch, der RSI aber nicht → die Kraft lässt nach.'}});
+
+add({id:'volumen',cat:'tools',title:'Volumen',sub:'Wie viel wird gehandelt?',icon:'vol',panel:'vol',
+ make(){const d=build([[0,104],[4,109],[9,101],[14,109],[19,101.5],[24,108.8],[29,102],[33,110.5],[35,115],[42,121]],{seed:40,noise:.4,wick:.5,vol:{32:2.2,33:3.2,34:3.4,35:2.6,36:1.7}});
+  return{data:d,steps:[
+   {to:30,text:'Seitwärtsphase: normales, eher geringes Volumen (unten).',ov:[{t:'h',p:110,col:C.down,label:'WIDERSTAND',to:41}]},
+   {to:36,text:'Ausbruch – und das Volumen explodiert! Viele Käufer steigen ein. Das macht den Ausbruch glaubwürdig.',ov:[{t:'label',i:34,p:d[34].h,text:'Ausbruch + Volumen',col:C.gold}]},
+   {to:42,text:'Merke: Ausbrüche ohne Volumen sind oft Fehlausbrüche.',hold:600}]};},
+ box:{was:'Das Volumen zeigt, wie viel in einer Kerze gehandelt wurde. Es steht meist als Balken unter dem Chart.',
+  erkennen:['Hohe Balken = viel Interesse','Niedrige Balken = wenig Interesse','Farbe wie die Kerze (grün/rot)'],
+  bedeutung:'Volumen bestätigt Bewegungen: Ein Ausbruch mit hohem Volumen ist stärker als einer ohne.',
+  tipp:'Sinkendes Volumen in einem Trend kann zeigen, dass dem Trend die Luft ausgeht.'}});
+
+/* ---- RISIKO & PRAXIS ---- */
+add({id:'stoploss',cat:'risiko',title:'Stop-Loss richtig setzen',sub:'Wo gehört der Stop hin?',icon:'stop',
+ make(){const d=build([[0,112],[8,100.4],[12,107],[18,100.6],[23,108],[29,101],[30,102.5],[38,113]],{seed:42,noise:.4,wick:.45,set:{30:{o:101,c:102.5,h:103,l:98.4}}});
+  const e=d[19].c;
+  return{data:d,steps:[
+   {to:19,text:'Der Kurs ist zweimal an der Unterstützung bei 100 abgeprallt.',ov:[{t:'h',p:100,col:C.up,label:'UNTERSTÜTZUNG',to:38}]},
+   {to:20,text:'Wir kaufen nach dem zweiten Abprall.',ov:[{t:'h',p:e,col:C.blue,label:'EINSTIEG',from:19,to:38,lab:33}]},
+   {text:'Fehler: Stop direkt unter der Linie – genau dort liegen die Stops von fast allen.',ov:[{t:'h',p:99.6,col:C.orange,label:'ENGER STOP ✗',from:19,to:38,dash:true,lab:33,lpos:'below',noTag:true}]},
+   {text:'Besser: Stop mit Abstand unter der Zone – unter dem letzten Tief plus Puffer.',ov:[{t:'h',p:97.3,col:C.down,label:'STOP-LOSS ✓',from:19,to:38,lab:33,lpos:'below'}]},
+   {to:31,text:'Ein langer Docht holt alle engen Stops ab (Stop-Hunt). Der gute Stop überlebt.',ov:[{t:'zone',i1:30,i2:30,col:C.orange,label:'STOP-HUNT'}]},
+   {to:39,text:'Danach steigt der Kurs. Mit dem engen Stop wärst du mit Verlust draußen gewesen.',hold:600}]};},
+ box:{was:'Der Stop-Loss ist eine automatische Verkaufsorder: Fällt der Kurs auf diesen Preis, wird die Position geschlossen. So bleibt ein Verlust klein.',
+  h2:'So machst du es',erkennen:['Bei Käufen unter die Unterstützung bzw. unter das letzte Tief','Mit Puffer – nicht direkt an die Linie','Vor dem Einstieg festlegen, nicht erst danach'],
+  bedeutung:'Der Stop entscheidet, ob ein Fehler 1 % oder 30 % kostet. Ohne Stop kann ein einziger Trade das Konto zerstören.',
+  tipp:'Den Stop niemals nach unten verschieben, „weil es ja wieder hochgehen muss“.'}});
+
+add({id:'crv',cat:'risiko',title:'Chance-Risiko-Verhältnis',sub:'Lohnt sich der Trade? (CRV)',icon:'crv',
+ make(){const d=build([[0,100],[8,112],[14,105.5],[17,106.5],[18,107.5],[28,118],[32,115]],{seed:44,noise:.4,wick:.45});
+  let hit=d.findIndex((c,i)=>i>18&&c.h>=116.5);if(hit<0)hit=28;
+  return{data:d,steps:[
+   {to:19,text:'Rücksetzer im Aufwärtstrend – wir planen einen Kauf bei 107,5.'},
+   {text:'Rot = RISIKO: vom Einstieg bis zum Stop-Loss (3 €). Grün = CHANCE: vom Einstieg bis zum Ziel (9 €).',ov:[{t:'pos',i1:18,i2:32,entry:107.5,stop:104.5,target:116.5}]},
+   {text:'9 € ÷ 3 € = 3 → CRV 1 : 3. Du riskierst 1, um 3 zu gewinnen.',hold:2600},
+   {to:33,text:'Das Ziel wird erreicht. Bei CRV 1 : 3 reicht es, wenn nur jeder dritte bis vierte Trade aufgeht.',ov:[{t:'label',i:hit,p:d[hit].h,text:'ZIEL ✓',col:C.up}],hold:600}]};},
+ box:{was:'Das Chance-Risiko-Verhältnis (CRV) vergleicht den möglichen Gewinn mit dem möglichen Verlust eines Trades.',
+  h2:'So rechnest du',erkennen:['Risiko = Einstieg − Stop-Loss','Chance = Ziel − Einstieg','CRV = Chance ÷ Risiko (9 ÷ 3 = 3 → 1 : 3)'],
+  bedeutung:'Mit gutem CRV darfst du oft falsch liegen und verdienst trotzdem: Bei 1 : 1 brauchst du über 50 % Treffer, bei 1 : 2 über 33 %, bei 1 : 3 nur über 25 %.',
+  tipp:'Viele Trader nehmen nur Trades mit einem CRV von mindestens 1 : 2.'}});
+
+add({id:'positionsgroesse',cat:'risiko',title:'Positionsgröße',sub:'Wie viel soll ich kaufen?',icon:'size',extra:'calc',
+ make(){const d=build([[0,100],[8,112],[14,105.5],[17,106.5],[18,107.5],[28,118],[32,115]],{seed:46,noise:.4,wick:.45});
+  return{data:d,steps:[
+   {to:19,text:'Derselbe Trade: Einstieg 107,5 – Stop-Loss 104,5. Aber wie viele Stück soll ich kaufen?',ov:[{t:'pos',i1:18,i2:30,entry:107.5,stop:104.5}]},
+   {text:'Schritt 1: Lege fest, wie viel du maximal verlieren willst – z. B. 1 % vom Konto. Bei 10.000 € sind das 100 €.',hold:3200},
+   {text:'Schritt 2: Der Abstand vom Einstieg zum Stop beträgt 3 € pro Stück.',hold:2800},
+   {text:'Schritt 3: 100 € ÷ 3 € = 33 Stück. Wird der Stop getroffen, verlierst du ca. 100 € – nicht mehr.',hold:3200},
+   {to:33,text:'Probiere es selbst im Rechner unter dem Video aus!',hold:600}]};},
+ box:{was:'Die Positionsgröße legt fest, wie viel du kaufst – so, dass ein Stop-Loss immer nur einen kleinen, festen Teil deines Kontos kostet.',
+  h2:'So rechnest du',erkennen:['Risiko in € = Konto × Risiko-% (z. B. 1 %)','Stop-Abstand = Einstieg − Stop-Loss','Stückzahl = Risiko in € ÷ Stop-Abstand'],
+  bedeutung:'So verlierst du bei jedem Fehltrade gleich viel – egal ob der Stop eng oder weit ist. Zehn Verluste hintereinander kosten dann nur rund 10 %.',
+  tipp:'Weiter Stop = weniger Stück. Enger Stop = mehr Stück. Das Risiko in € bleibt gleich.'}});
+
+add({id:'hebel',cat:'risiko',title:'Hebel & Liquidation',sub:'Warum hoher Hebel so gefährlich ist',icon:'hebel',
+ make(){const d=build([[0,95],[10,100],[13,97.5],[14,97],[15,96.3],[16,98],[26,108]],{seed:48,noise:.4,wick:.4,set:{15:{o:97,c:96.3,h:97.4,l:94.8}}});
+  return{data:d,steps:[
+   {to:11,text:'Wir kaufen bei 100 € – diesmal mit Hebel.',ov:[{t:'h',p:100,col:C.blue,label:'EINSTIEG 100',from:10,to:26}]},
+   {text:'Mit 20× Hebel liegt die Liquidation nur ca. 4,5 % tiefer.',ov:[{t:'h',p:95.5,col:C.down,label:'LIQUIDATION 20×',from:10,to:26,lab:21}]},
+   {text:'Mit 10× Hebel hast du ungefähr doppelt so viel Platz.',ov:[{t:'h',p:90.5,col:C.orange,label:'LIQUIDATION 10×',from:10,to:26,lab:21}]},
+   {to:16,text:'Ein kurzer Docht nach unten – bei 20× ist die Position weg (liquidiert). Der Einsatz ist verloren.',ov:[{t:'label',i:15,p:94.8,text:'LIQUIDIERT ✗',col:C.down,pos:'below'}]},
+   {to:27,text:'Danach steigt der Kurs auf 108. Der 20×-Trader ist trotzdem raus – der 10×-Trader ist im Gewinn.',ov:[{t:'label',i:21,p:d[21].h,text:'10× im Gewinn ✓',col:C.up}],hold:600}]};},
+ box:{was:'Mit Hebel handelst du mit mehr Geld, als du einsetzt. Bei 10× Hebel bewegen 100 € Einsatz 1.000 € – Gewinne UND Verluste sind 10-mal so groß.',
+  h2:'Faustregel (Long, isoliert)',erkennen:['5× → Liquidation ca. 20 % unter dem Einstieg','10× → ca. 10 %, 20× → ca. 5 %','50× → nur noch ca. 2 % (Werte je nach Börse und Gebühren)'],
+  bedeutung:'Bei der Liquidation schließt die Börse deine Position zwangsweise – der Einsatz ist weg, auch wenn der Kurs danach wieder steigt.',
+  tipp:'Der Stop-Loss muss immer VOR der Liquidation liegen. Ein niedriger Hebel gibt deinem Trade Luft.'}});
+
+add({id:'nachziehen',cat:'risiko',title:'Stop nachziehen',sub:'Gewinne laufen lassen und sichern',icon:'trail',
+ make(){const d=build([[0,100],[6,108],[9,104],[15,113],[18,109],[24,119],[27,115],[33,124],[36,120],[38,117],[42,112]],{seed:50,noise:.4,wick:.45});
+  const s1=d[9].l-.8,s2=d[18].l-.8,s3=d[27].l-.8,e=d[10].c;let hit=d.findIndex((c,i)=>i>28&&c.l<=s3);if(hit<0)hit=38;
+  return{data:d,steps:[
+   {to:11,text:'Einstieg nach dem ersten Rücksetzer – der Stop liegt unter dem Tief.',ov:[{t:'h',p:e,col:C.blue,label:'EINSTIEG',from:10,to:42,lab:33,lpos:'below'},{t:'h',p:s1,col:C.down,label:'STOP',from:10,to:19,lpos:'below'}]},
+   {to:20,text:'Ein neues, höheres Tief ist entstanden → wir ziehen den Stop darunter nach.',ov:[{t:'h',p:s2,col:C.orange,label:'STOP ↑',from:19,to:28,lpos:'below'}]},
+   {to:29,text:'Noch ein höheres Tief. Der Stop liegt jetzt über dem Einstieg – dieser Trade kann kein Verlust mehr werden.',ov:[{t:'h',p:s3,col:C.up,label:'STOP ↑ IM GEWINN',from:28,to:42,lab:29}]},
+   {to:43,text:'Der Trend bricht – wir werden mit Gewinn ausgestoppt.',ov:[{t:'label',i:hit,p:d[hit].l,text:'RAUS MIT GEWINN ✓',col:C.up,pos:'below'}],hold:600}]};},
+ box:{was:'Beim Nachziehen (Trailing Stop) verschiebst du den Stop-Loss in Trendrichtung, sobald neue höhere Tiefs entstehen.',
+  h2:'So machst du es',erkennen:['Neues höheres Tief bestätigt → Stop knapp darunter','Nur in Gewinnrichtung verschieben, nie zurück','Liegt der Stop über dem Einstieg, ist der Trade abgesichert'],
+  bedeutung:'So lässt du Gewinne laufen und sicherst sie trotzdem Schritt für Schritt ab.',
+  tipp:'Nicht zu eng nachziehen – sonst fliegst du bei jedem normalen Rücksetzer raus.'}});
+
+add({id:'psychologie',cat:'risiko',title:'FOMO & Rache-Trades',sub:'Die größten Fehler im Kopf',icon:'psycho',
+ make(){const d=build([[0,100],[10,103],[14,108],[16,116],[17,119],[19,113],[24,106],[27,108.5],[29,105.5],[32,104.2],[38,111]],{seed:52,noise:.4,wick:.5});
+  return{data:d,steps:[
+   {to:16,text:'Der Kurs explodiert. Überall heißt es: „Jetzt noch schnell rein!“'},
+   {to:18,text:'FOMO (Angst, etwas zu verpassen): Kauf ganz oben – ohne Plan und ohne Stop.',ov:[{t:'label',i:17,p:d[17].h,text:'FOMO-KAUF ✗',col:C.down}]},
+   {to:25,text:'Der Kurs fällt zurück. Panik – Verkauf mit Verlust.',ov:[{t:'label',i:24,p:d[24].l,text:'PANIK ✗',col:C.orange,pos:'below'}]},
+   {to:29,text:'Sofort der nächste Trade, um den Verlust zurückzuholen: der Rache-Trade. Meist folgt der nächste Verlust.',ov:[{t:'label',i:27,p:d[27].h,text:'RACHE-TRADE ✗',col:C.down}]},
+   {to:39,text:'Profis warten geduldig auf ihr Setup – mit Plan, Stop-Loss und gutem CRV.',ov:[{t:'zone',i1:31,i2:33,col:C.up,label:'PLAN ✓',below:true}],hold:600}]};},
+ box:{was:'Die größten Feinde beim Trading sind oft die eigenen Gefühle: Gier, Angst und Ungeduld.',
+  h2:'Typische Fehler',erkennen:['FOMO: Kauf nach einem großen Anstieg aus Angst, etwas zu verpassen','Rache-Trade: sofort neu einsteigen, um einen Verlust zurückzuholen','Stop-Loss verschieben oder ganz weglassen'],
+  bedeutung:'Emotionale Trades haben keinen Plan, keinen Stop und kein CRV – deshalb gehen sie meistens schief.',
+  tipp:'Schreib vor jedem Trade auf: Einstieg, Stop, Ziel, CRV. Kein Plan = kein Trade. Nach zwei Verlusten am Tag: Pause.'}});
+
+/* ============ Mini-Icons ============ */
+function icon(k){
+ const g='#1fcf8f',r='#f0605d',y='#f5c542',b='#4c9aff';
+ const c=(x,o,cl,h,l,col)=>`<line x1="${x}" y1="${h}" x2="${x}" y2="${l}" stroke="${col}" stroke-width="1.4"/><rect x="${x-2.5}" y="${Math.min(o,cl)}" width="5" height="${Math.max(1.4,Math.abs(o-cl))}" fill="${col}"/>`;
+ const P={
+  anat:c(14,22,10,5,27,g),
+  trend:`<polyline points="3,25 9,15 13,20 19,10 23,15 29,5" fill="none" stroke="${g}" stroke-width="1.8"/>`,
+  sr:`<line x1="2" y1="9" x2="30" y2="9" stroke="${r}" stroke-width="1.5"/><line x1="2" y1="23" x2="30" y2="23" stroke="${g}" stroke-width="1.5"/><polyline points="3,16 8,9 13,23 18,9 23,23 29,12" fill="none" stroke="#9aa6b6" stroke-width="1.2"/>`,
+  tl:`<polyline points="3,24 8,14 12,20 18,9 22,15 28,6" fill="none" stroke="#9aa6b6" stroke-width="1.2"/><line x1="3" y1="27" x2="29" y2="11" stroke="${y}" stroke-width="1.6"/>`,
+  kanal:`<line x1="3" y1="18" x2="29" y2="4" stroke="${r}" stroke-width="1.5"/><line x1="3" y1="28" x2="29" y2="14" stroke="${g}" stroke-width="1.5"/>`,
+  retest:`<line x1="2" y1="16" x2="30" y2="16" stroke="${y}" stroke-width="1.4" stroke-dasharray="3 2"/><polyline points="3,24 9,16 13,22 18,8 23,16 29,5" fill="none" stroke="${g}" stroke-width="1.6"/>`,
+  doji:c(10,10,8,8,26,r)+c(16,15,15,8,23,y)+c(22,15,8,6,16,g),
+  hammer:c(10,6,14,5,15,r)+c(16,18,16,15,29,g)+c(22,16,9,7,17,g),
+  star:c(10,22,14,13,24,g)+c(16,14,15,3,16,r)+c(22,16,23,15,25,r),
+  engbull:c(12,11,17,10,18,r)+c(19,20,7,5,22,g),
+  engbear:c(12,20,14,13,21,g)+c(19,10,23,8,25,r),
+  morning:c(9,6,18,5,19,r)+c(16,22,21,19,25,y)+c(23,18,8,7,19,g),
+  evening:c(9,24,12,11,25,g)+c(16,9,10,6,12,y)+c(23,12,23,11,25,r),
+  soldaten:c(9,24,18,17,26,g)+c(16,19,12,11,20,g)+c(23,13,6,5,14,g),
+  sks:`<polyline points="2,26 7,14 11,20 16,5 21,20 25,14 30,27" fill="none" stroke="${y}" stroke-width="1.6"/><line x1="4" y1="20" x2="30" y2="20" stroke="${b}" stroke-width="1.2" stroke-dasharray="3 2"/>`,
+  w:`<polyline points="3,6 9,25 15,13 21,25 29,4" fill="none" stroke="${g}" stroke-width="1.8"/>`,
+  m:`<polyline points="3,26 9,7 15,19 21,7 29,28" fill="none" stroke="${r}" stroke-width="1.8"/>`,
+  dreieck:`<line x1="3" y1="8" x2="29" y2="8" stroke="${r}" stroke-width="1.5"/><line x1="3" y1="27" x2="27" y2="9" stroke="${g}" stroke-width="1.5"/>`,
+  flagge:`<line x1="7" y1="28" x2="7" y2="6" stroke="#9aa6b6" stroke-width="1.8"/><polygon points="8,6 26,10 26,19 8,15" fill="${hexA('#f5c542',.25)}" stroke="${y}" stroke-width="1.2"/>`,
+  keil:`<line x1="3" y1="4" x2="28" y2="20" stroke="${r}" stroke-width="1.5"/><line x1="3" y1="14" x2="28" y2="23" stroke="${g}" stroke-width="1.5"/>`,
+  fib:[4,9,13,17,21,28].map((yy,i)=>`<line x1="3" y1="${yy}" x2="29" y2="${yy}" stroke="${i===3||i===4?y:'#5d6b7e'}" stroke-width="1.2"/>`).join('')+`<rect x="3" y="17" width="26" height="4" fill="${hexA('#f5c542',.3)}"/>`,
+  ma:`<polyline points="3,10 9,18 15,22 21,16 29,6" fill="none" stroke="${y}" stroke-width="1.6"/><polyline points="3,8 10,14 17,18 23,16 29,12" fill="none" stroke="${b}" stroke-width="1.6"/>`,
+  rsi:`<line x1="2" y1="9" x2="30" y2="9" stroke="${r}" stroke-dasharray="2 2"/><line x1="2" y1="23" x2="30" y2="23" stroke="${g}" stroke-dasharray="2 2"/><polyline points="3,16 8,6 13,12 18,26 23,20 29,14" fill="none" stroke="#b388ff" stroke-width="1.6"/>`,
+  stop:`<line x1="2" y1="22" x2="30" y2="22" stroke="${r}" stroke-width="1.6"/><polyline points="3,8 9,16 14,12 20,18 25,10 29,6" fill="none" stroke="#9aa6b6" stroke-width="1.4"/><circle cx="20" cy="18" r="2" fill="${b}"/>`,
+  crv:`<rect x="6" y="5" width="20" height="13" fill="${hexA('#1fcf8f',.35)}"/><rect x="6" y="18" width="20" height="6" fill="${hexA('#f0605d',.4)}"/><line x1="6" y1="18" x2="26" y2="18" stroke="#e6ecf3" stroke-width="1.2"/>`,
+  size:`<rect x="5" y="20" width="5" height="7" fill="${g}"/><rect x="13" y="14" width="5" height="13" fill="${g}"/><rect x="21" y="7" width="5" height="20" fill="${y}"/>`,
+  hebel:`<line x1="3" y1="24" x2="29" y2="10" stroke="#9aa6b6" stroke-width="2"/><polygon points="14,25 18,25 16,18" fill="${y}"/><line x1="2" y1="29" x2="30" y2="29" stroke="${r}" stroke-dasharray="2 2"/>`,
+  trail:`<polyline points="3,26 8,18 11,21 16,12 19,15 24,7 29,9" fill="none" stroke="${g}" stroke-width="1.5"/><path d="M3 28h8v-5h8v-6h10" fill="none" stroke="${y}" stroke-width="1.4"/>`,
+  psycho:`<circle cx="16" cy="16" r="11" fill="none" stroke="${y}" stroke-width="1.5"/><circle cx="12" cy="14" r="1.5" fill="${y}"/><circle cx="20" cy="14" r="1.5" fill="${y}"/><path d="M11 22c3-3 7-3 10 0" fill="none" stroke="${y}" stroke-width="1.5"/>`,
+  vol:[6,8,5,7,6,16,22,12].map((h,i)=>`<rect x="${3+i*3.4}" y="${29-h}" width="2.4" height="${h}" fill="${i>4?y:'#5d6b7e'}"/>`).join('')
+ };
+ return `<svg width="30" height="30" viewBox="0 0 32 32">${P[k]||''}</svg>`;
+}
+
+/* ============ Fortschritt ============ */
+let seen={},best=0;try{seen=JSON.parse(localStorage.getItem('cs-seen')||'{}');best=+(localStorage.getItem('cs-best')||0)}catch(e){}
+function markSeen(id){seen[id]=1;try{localStorage.setItem('cs-seen',JSON.stringify(seen))}catch(e){}renderList();updProg();}
+function updProg(){const n=LESSONS.filter(l=>seen[l.id]).length;document.getElementById('progtxt').textContent=`${n} / ${LESSONS.length} gesehen`;document.getElementById('progbar').style.width=(n/LESSONS.length*100)+'%';}
+
+/* ============ Liste ============ */
+const listEl=document.getElementById('list'),searchEl=document.getElementById('search');
+let current=null;
+function renderList(){
+ const q=searchEl.value.trim().toLowerCase();let h='';
+ for(const ck in CATS){
+  const ls=LESSONS.filter(l=>l.cat===ck&&(!q||(l.title+' '+l.sub).toLowerCase().includes(q)));
+  if(!ls.length)continue;
+  h+=`<div class="cat">${CATS[ck]}</div>`;
+  ls.forEach(l=>{h+=`<button class="item ${seen[l.id]?'seen':''} ${current&&current.id===l.id?'on':''}" data-id="${l.id}"><div class="ic">${icon(l.icon)}</div><div><b>${l.title}</b><span>${l.sub}</span></div><div class="ok">✓</div></button>`;});
+ }
+ const qb=`<button class="item quizbtn ${location.hash==='#quiz'?'on':''}" data-q="1"><div class="ic" style="font-size:18px">🎯</div><div><b>Quiz</b><span>Teste dein Wissen – 10 Fragen${best?` · Bestwert ${best}/10`:''}</span></div></button>`;
+ listEl.innerHTML=(q?'':qb)+(h||'<p style="color:var(--mute);padding:10px">Nichts gefunden.</p>');
+}
+listEl.addEventListener('click',e=>{const b=e.target.closest('.item');if(!b)return;location.hash=b.dataset.q?'quiz':b.dataset.id;});
+searchEl.addEventListener('input',renderList);
+
+/* ============ Player ============ */
+const view=document.getElementById('view');
+const P={L:null,tl:null,t:0,playing:false,speed:1,last:0,dirty:true,cv:null,ctx:null,W:0,H:0,stepIdx:-1};
+
+function prepare(L){
+ if(L.custom){L.data=null;return;}
+ if(!L.data){const m=L.make();L.data=m.data;L.steps=m.steps;}
+ const d=L.data;let lo=Math.min(...d.map(c=>c.l)),hi=Math.max(...d.map(c=>c.h));
+ const take=p=>{if(p!=null&&isFinite(p)){lo=Math.min(lo,p);hi=Math.max(hi,p);}};
+ L.steps.forEach(s=>(s.ov||[]).forEach(o=>{
+  if(o.t==='line'){take(o.a[1]);take(o.b[1]);const sl=(o.b[1]-o.a[1])/(o.b[0]-o.a[0]);take(o.b[1]+sl*(o.ext||0));}
+  if(o.t==='arrow'){take(o.a[1]);take(o.b[1]);}
+  if(o.t==='h')take(o.p);
+  if(o.t==='pos'){take(o.entry);take(o.stop);take(o.target);}
+  if(o.t==='fib'){take(o.p1);take(o.p2);}
+  if(o.t==='sma')o._s=smaCalc(d,o.n);
+  if(o.t==='cross'){const f=smaCalc(d,o.f),s=smaCalc(d,o.s);o._f=f;o._i=-1;
+    for(let i=o.s;i<d.length;i++){if(f[i-1]!=null&&s[i-1]!=null&&f[i-1]<=s[i-1]&&f[i]>s[i]){o._i=i;o._p=f[i];break;}}}
+ }));
+ L.lo=lo;L.hi=hi;
+ if(L.panel==='rsi')L.rsi=rsiCalc(d);
+}
+function buildTL(L){
+ const tl={steps:[],cseg:[],ovs:[],total:0};
+ if(L.custom){tl.steps=L.steps.map(s=>({t:s.at,text:s.text}));tl.total=L.total;return tl;}
+ let T=350,shown=0;const n=L.data.length;
+ L.steps.forEach((s,si)=>{
+  tl.steps.push({t:T,text:s.text});
+  if(s.to!=null&&s.to>shown){const d=Math.max(450,(s.to-shown)*95);tl.cseg.push({t0:T,t1:T+d,from:shown,to:s.to});T+=d;shown=s.to;}
+  (s.ov||[]).forEach(o=>{const d=o.t==='fib'?1800:(['line','h','arrow','sma','path','pos'].includes(o.t)?1000:480);tl.ovs.push({o,t0:T,t1:T+d});T+=d+140;});
+  T+=s.hold??2300;
+ });
+ tl.total=T;return tl;
+}
+function visibleAt(t){let v=0;for(const s of P.tl.cseg){if(t>=s.t1)v=s.to;else if(t>=s.t0)v=s.from+(s.to-s.from)*(t-s.t0)/(s.t1-s.t0);}return v;}
+
+function openLesson(id){
+ const L=LESSONS.find(l=>l.id===id);if(!L){showHome();return;}
+ current=L;prepare(L);
+ const idx=LESSONS.indexOf(L),prev=LESSONS[idx-1],next=LESSONS[idx+1],b=L.box;
+ view.innerHTML=`
+ <button class="back" id="back">‹ ${CATS[L.cat]}</button>
+ <div class="kicker">${CATS[L.cat]} · Lektion ${idx+1} von ${LESSONS.length}</div>
+ <h1>${L.title}</h1>
+ <p class="lead">${L.lead||L.sub}</p>
+ <div class="player">
+  <div class="cwrap" id="cwrap"><canvas id="cv"></canvas><div class="overlay" id="ovl"><div id="ovltxt">▶ ABSPIELEN</div></div></div>
+  <div class="caption"><div class="no" id="stepno"></div><p id="captxt"></p></div>
+  <div class="ctrl"><button class="cb" id="play" title="Abspielen/Pause">❚❚</button><input type="range" id="seek" min="0" step="10" value="0"><button class="cb" id="speed" title="Geschwindigkeit">1×</button><button class="cb" id="restart" title="Von vorne">⟲</button></div>
+  <div class="chips" id="chips"></div>
+ </div>
+ <div class="info">
+  <div class="box b"><h3>Was ist das?</h3><p>${b.was}</p></div>
+  <div class="box g"><h3>${b.h2||'So erkennst du es'}</h3><ul>${b.erkennen.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+  <div class="box y"><h3>Was bedeutet es?</h3><p>${b.bedeutung}</p></div>
+  <div class="box r"><h3>Tipp</h3><p>${b.tipp}</p></div>
+ </div>
+ ${L.extra==='calc'?calcHTML():''}
+ <div class="pn"><button id="prev" ${prev?'':'disabled'}><small>‹ ZURÜCK</small>${prev?prev.title:'–'}</button><button id="next" ${next?'':'disabled'}><small>WEITER ›</small>${next?next.title:'–'}</button></div>
+ <p class="disc">Nur zu Lernzwecken – keine Anlageberatung. Muster erhöhen Wahrscheinlichkeiten, garantieren aber nichts.</p>`;
+ document.getElementById('back').onclick=()=>{location.hash='kat-'+L.cat;};
+ if(prev)document.getElementById('prev').onclick=()=>location.hash=prev.id;
+ if(next)document.getElementById('next').onclick=()=>location.hash=next.id;
+ P.L=L;P.tl=buildTL(L);P.t=0;P.playing=true;P.stepIdx=-1;P.cv=document.getElementById('cv');P.ctx=P.cv.getContext('2d');
+ const seek=document.getElementById('seek');seek.max=P.tl.total;
+ seek.oninput=()=>{P.t=+seek.value;P.dirty=true;};
+ document.getElementById('play').onclick=togglePlay;
+ document.getElementById('cwrap').onclick=togglePlay;
+ document.getElementById('restart').onclick=()=>{P.t=0;P.playing=true;P.dirty=true;updBtn();};
+ document.getElementById('speed').onclick=e=>{P.speed=P.speed===1?2:P.speed===2?0.5:1;e.target.textContent=(P.speed===0.5?'½':P.speed)+'×';};
+ document.getElementById('chips').innerHTML=P.tl.steps.map((s,i)=>`<button class="chip" data-i="${i}">${i+1}</button>`).join('');
+ document.getElementById('chips').onclick=e=>{const c=e.target.closest('.chip');if(!c)return;P.t=P.tl.steps[+c.dataset.i].t+1;P.playing=true;P.dirty=true;updBtn();};
+ if(L.extra==='calc')initCalc();
+ resize();updBtn();renderList();window.scrollTo(0,0);
+}
+function togglePlay(){if(!P.L)return;if(P.t>=P.tl.total){P.t=0;P.playing=true;}else P.playing=!P.playing;P.dirty=true;updBtn();}
+function updBtn(){const b=document.getElementById('play');if(!b)return;b.textContent=P.playing?'❚❚':(P.t>=P.tl.total?'⟲':'▶');
+ const o=document.getElementById('ovl');const end=P.t>=P.tl.total;o.classList.toggle('show',!P.playing);document.getElementById('ovltxt').textContent=end?'⟲ NOCHMAL ANSEHEN':'▶ WEITER';}
+function resize(){
+ if(!P.cv)return;const w=P.cv.parentElement.clientWidth;const panel=P.L&&P.L.panel;
+ const h=Math.round(Math.min(470,Math.max(300,w*0.62))+(panel?110:0));
+ const dpr=window.devicePixelRatio||1;P.cv.width=w*dpr;P.cv.height=h*dpr;P.cv.style.height=h+'px';P.ctx.setTransform(dpr,0,0,dpr,0,0);P.W=w;P.H=h;P.dirty=true;
+}
+window.addEventListener('resize',resize);
+
+const CATINFO={
+ basis:{d:'Kerzen lesen, Trends, Linien und Zonen – das Fundament von allem.',acc:'#4c9aff'},
+ kerzen:{d:'Einzelne Kerzen und Kombinationen, die Wenden ankündigen.',acc:'#1fcf8f'},
+ formation:{d:'Große Muster im Chart: Schulter-Kopf-Schulter, W, M, Dreiecke, Flaggen.',acc:'#f5c542'},
+ tools:{d:'Fibonacci, gleitende Durchschnitte, RSI und Volumen.',acc:'#b388ff'},
+ risiko:{d:'Stop-Loss, CRV, Positionsgröße, Hebel und Psychologie.',acc:'#f0605d'}};
+const CATICON={basis:'trend',kerzen:'morning',formation:'sks',tools:'fib',risiko:'crv'};
+const bigIcon=k=>icon(k).replace('width="30" height="30"','width="58" height="58"');
+function showHome(){
+ current=null;P.L=null;P.cv=null;
+ const tiles=Object.keys(CATS).map(ck=>{const ls=LESSONS.filter(l=>l.cat===ck),n=ls.length,sn=ls.filter(l=>seen[l.id]).length,ci=CATINFO[ck];
+  return `<button class="big" data-h="kat-${ck}" style="--acc:${ci.acc};--glow:${hexA(ci.acc,.16)}"><div class="bi">${bigIcon(CATICON[ck])}</div><h2>${CATS[ck]}</h2><p>${ci.d}</p><div class="ft"><span>${n} LEKTIONEN</span><div class="pb"><i style="width:${sn/n*100}%"></i></div><span>${sn}/${n}</span><span class="go">›</span></div></button>`;}).join('');
+ const quiz=`<button class="big" data-h="quiz" style="--acc:#ff9f43;--glow:rgba(255,159,67,.16)"><div class="bi" style="font-size:46px;line-height:1">🎯</div><h2>Quiz</h2><p>Teste dein Wissen: 10 zufällige Fragen mit Bildern und Rechenaufgaben.</p><div class="ft"><span>${best?`BESTWERT ${best}/10`:'NOCH NICHT GESPIELT'}</span><span style="flex:1"></span><span class="go">›</span></div></button>`;
+ view.innerHTML=`<div class="home"><div class="kicker">Willkommen</div><h1>Charts lesen lernen</h1>
+ <p class="lead">Jede Lektion ist ein kleines Video: Der Chart baut sich Kerze für Kerze auf und wird Schritt für Schritt erklärt.</p>
+ <div class="bigtiles">${tiles}${quiz}</div>
+ <p class="disc">Nur zu Lernzwecken – keine Anlageberatung.</p></div>`;
+ view.querySelectorAll('.big').forEach(t=>t.onclick=()=>location.hash=t.dataset.h);
+ renderList();window.scrollTo(0,0);
+}
+function showCat(ck){
+ if(!CATS[ck]){showHome();return;}current=null;P.L=null;P.cv=null;
+ const ls=LESSONS.filter(l=>l.cat===ck),ci=CATINFO[ck];
+ view.innerHTML=`<div class="home" style="--acc:${ci.acc}"><button class="back" id="back">‹ Startseite</button>
+ <div class="kicker">${ls.length} Lektionen · ${ls.filter(l=>seen[l.id]).length} gesehen</div><h1 style="color:${ci.acc}">${CATS[ck]}</h1><p class="lead">${ci.d}</p>
+ <div class="lcards">${ls.map((l,i)=>`<button class="lc" data-id="${l.id}"><div class="ic">${icon(l.icon).replace('width="30" height="30"','width="38" height="38"')}</div><div><small>LEKTION ${i+1}</small><b>${l.title}</b><span>${l.sub}</span></div>${seen[l.id]?'<div class="ok">✓</div>':''}</button>`).join('')}</div>
+ <p class="disc">Nur zu Lernzwecken – keine Anlageberatung.</p></div>`;
+ document.getElementById('back').onclick=()=>{location.hash='';};
+ view.querySelectorAll('.lc').forEach(b=>b.onclick=()=>location.hash=b.dataset.id);
+ renderList();window.scrollTo(0,0);
+}
+
+/* ============ Rechner Positionsgröße ============ */
+const num=v=>parseFloat(String(v).replace(/\./g,'').replace(',','.'));
+const de=(x,d=2)=>x.toLocaleString('de-DE',{minimumFractionDigits:d,maximumFractionDigits:d});
+function calcHTML(){return `<div class="box calc y"><h3>Rechner: Positionsgröße</h3>
+ <div class="grid">
+  <div><label>KONTO (€)</label><input id="k_konto" inputmode="decimal" value="10.000"></div>
+  <div><label>RISIKO PRO TRADE (%)</label><input id="k_risk" inputmode="decimal" value="1"></div>
+  <div><label>EINSTIEG (€)</label><input id="k_entry" inputmode="decimal" value="107,5"></div>
+  <div><label>STOP-LOSS (€)</label><input id="k_stop" inputmode="decimal" value="104,5"></div>
+ </div><div class="res" id="k_res"></div></div>`;}
+function initCalc(){const ids=['k_konto','k_risk','k_entry','k_stop'];ids.forEach(i=>document.getElementById(i).addEventListener('input',runCalc));runCalc();}
+function runCalc(){const gv=i=>num(document.getElementById(i).value),k=gv('k_konto'),r=gv('k_risk'),e=gv('k_entry'),s=gv('k_stop'),out=document.getElementById('k_res');
+ if(![k,r,e,s].every(isFinite)||k<=0||r<=0||e<=0||s<=0||e===s){out.innerHTML='<div style="grid-column:1/-1"><span>HINWEIS</span>Bitte alle Felder mit gültigen Zahlen füllen (Einstieg ≠ Stop).</div>';return;}
+ const riskE=k*r/100,dist=Math.abs(e-s),qty=riskE/dist,val=qty*e,share=val/k*100,lev=Math.max(1,val/k);
+ out.innerHTML=`<div><span>RISIKO IN €</span><b>${de(riskE)} €</b></div>
+ <div><span>STOP-ABSTAND</span><b>${de(dist)} € (${de(dist/e*100,1)} %)</b></div>
+ <div><span>STÜCKZAHL</span><b style="color:var(--gold)">${de(qty,qty<10?3:1)}</b></div>
+ <div><span>POSITIONSWERT</span><b>${de(val)} €</b></div>
+ <div style="grid-column:1/-1"><span>EINORDNUNG</span>${share<=100?`Die Position nutzt ${de(share,0)} % deines Kontos – kein Hebel nötig.`:`Die Position ist größer als dein Konto – du bräuchtest ca. ${de(lev,1)}× Hebel. Lieber einen engeren, sinnvollen Stop wählen oder weniger kaufen.`} ${e<s?'<br>(Stop über dem Einstieg = Short-Trade.)':''}</div>`;}
+
+/* ============ Quiz ============ */
+const QZ={doji:[13,13],hammer:[13,13],shootingstar:[13,13],'engulfing-bull':[12,13],'engulfing-bear':[12,13],morningstar:[11,13],eveningstar:[11,13],soldaten:[12,14]};
+const TQ=[
+ {q:'Was zeigt das obere Ende des Dochts einer Kerze?',a:['Den höchsten Preis im Zeitraum (Hoch)','Den Schlusskurs','Das Handelsvolumen','Den Eröffnungskurs'],e:'Der Docht reicht immer bis zum Hoch bzw. Tief des Zeitraums.',l:'kerze'},
+ {q:'Wo liegt bei einer ROTEN Kerze die Eröffnung?',a:['Oben am Körper','Unten am Körper','Am Ende des unteren Dochts','Genau in der Mitte'],e:'Rot heißt: Der Kurs ist gefallen. Also liegt die Eröffnung oben und der Schluss unten.',l:'kerze'},
+ {q:'Woran erkennst du einen Aufwärtstrend?',a:['Höhere Hochs und höhere Tiefs','Viele grüne Kerzen hintereinander','Ein RSI unter 30','Tiefere Hochs und tiefere Tiefs'],e:'Ein Aufwärtstrend ist eine Treppe aus höheren Hochs (HH) und höheren Tiefs (HT).',l:'trend'},
+ {q:'Ein Widerstand wird gebrochen und danach von oben getestet. Was ist er jetzt?',a:['Eine Unterstützung','Immer noch ein Widerstand','Eine Nackenlinie','Unwichtig'],e:'Das nennt man Rollentausch: Der alte Widerstand wird zur neuen Unterstützung.',l:'retest'},
+ {q:'Was bedeutet ein RSI über 70?',a:['Der Markt ist überkauft','Der Markt ist überverkauft','Das Volumen ist hoch','Der Trend ist gebrochen'],e:'Über 70 = überkauft, unter 30 = überverkauft. In starken Trends kann das aber lange anhalten.',l:'rsi'},
+ {q:'Was ist ein Golden Cross?',a:['Der schnelle MA kreuzt den langsamen von unten nach oben','Der Kurs erreicht die Golden Zone','Der RSI kreuzt die 50','Zwei Kerzen gleicher Größe'],e:'Golden Cross = bullisch. Das Gegenteil (Kreuzung nach unten) heißt Death Cross.',l:'gleitende'},
+ {q:'Zwischen welchen Fibonacci-Stufen liegt die Golden Zone?',a:['0,5 und 0,618','0,236 und 0,382','0,786 und 1','0 und 0,236'],e:'Die Golden Zone liegt zwischen 50 % und 61,8 % des Rücksetzers.',l:'fibonacci'},
+ {q:'Wann ist eine Schulter-Kopf-Schulter-Formation bestätigt?',a:['Beim Bruch der Nackenlinie','Sobald der Kopf fertig ist','Bei der linken Schulter','Wenn der RSI über 70 steigt'],e:'Erst der Bruch der Nackenlinie bestätigt die Formation.',l:'sks'},
+ {q:'Einstieg 50 €, Stop-Loss 48 €, Ziel 56 €. Wie groß ist das CRV?',a:['1 : 3','1 : 2','1 : 4','3 : 1'],e:'Risiko 2 €, Chance 6 € → 6 ÷ 2 = 3 → CRV 1 : 3.',l:'crv'},
+ {q:'Konto 5.000 €, Risiko 1 %, Stop-Abstand 2 €. Wie viele Stück kaufst du?',a:['25 Stück','50 Stück','10 Stück','250 Stück'],e:'1 % von 5.000 € = 50 €. 50 € ÷ 2 € = 25 Stück.',l:'positionsgroesse'},
+ {q:'Long mit 20× Hebel: Wo liegt die Liquidation ungefähr?',a:['Ca. 5 % unter dem Einstieg','Ca. 20 % unter dem Einstieg','Ca. 50 % unter dem Einstieg','Es gibt keine Liquidation'],e:'Faustregel: 100 % ÷ Hebel. 20× → ca. 5 % (je nach Börse und Gebühren etwas weniger).',l:'hebel'},
+ {q:'Was ist ein Rache-Trade?',a:['Ein sofortiger Trade, um einen Verlust zurückzuholen','Ein Trade gegen den Trend','Ein Short-Trade','Ein Trade mit Stop-Loss'],e:'Rache-Trades entstehen aus Wut – ohne Plan. Meist folgt der nächste Verlust.',l:'psychologie'},
+ {q:'Kauf an einer Unterstützung: Wo gehört der Stop-Loss hin?',a:['Mit Puffer unter die Zone bzw. das letzte Tief','Genau auf die Linie','Über den Einstieg','Man braucht keinen Stop'],e:'Direkt an der Linie liegen die meisten Stops – dort wird gerne „abgefischt“.',l:'stoploss'},
+ {q:'Ein Ausbruch passiert mit sehr geringem Volumen. Was heißt das?',a:['Vorsicht – Gefahr eines Fehlausbruchs','Ein besonders starkes Signal','Der Trend ist sicher','Volumen spielt keine Rolle'],e:'Echte Ausbrüche kommen meist mit hohem Volumen.',l:'volumen'},
+ {q:'Was zeigt ein Doji?',a:['Unentschlossenheit','Starke Käufer','Starke Verkäufer','Hohes Volumen'],e:'Eröffnung ≈ Schluss: Käufer und Verkäufer sind im Gleichgewicht.',l:'doji'},
+ {q:'CRV 1 : 3 – welche Trefferquote brauchst du mindestens, um nicht zu verlieren?',a:['Etwas über 25 %','Über 50 %','Über 75 %','100 %'],e:'Bei 1 : 3 gleicht ein Gewinner drei Verlierer aus (Gebühren nicht eingerechnet).',l:'crv'},
+ {q:'Was bedeutet „Stop nachziehen“?',a:['Den Stop in Trendrichtung unter neue Tiefs verschieben','Den Stop weiter nach unten setzen','Den Stop löschen','Nachkaufen, wenn es fällt'],e:'Nur in Gewinnrichtung verschieben – nie zurück.',l:'nachziehen'},
+ {q:'Wie ziehst du Fibonacci im Aufwärtstrend?',a:['Vom Tief zum Hoch','Vom Hoch zum Tief','Von links nach rechts über alle Kerzen','Vom Schluss zur Eröffnung'],e:'Im Aufwärtstrend vom Tief zum Hoch, im Abwärtstrend vom Hoch zum Tief.',l:'fibonacci'},
+ {q:'Welche Form hat ein Doppelter Boden?',a:['W','M','V','Dreieck'],e:'Zwei Tiefs mit einem Hoch dazwischen – wie ein W.',l:'doppelboden'},
+ {q:'Was ist eine Flagge?',a:['Eine Fortsetzungsformation','Eine Umkehrformation','Ein Indikator','Eine Kerze'],e:'Nach der Flagge geht der vorherige Trend meist weiter.',l:'flagge'},
+ {q:'Wie viel vom Konto riskieren viele Profis pro Trade?',a:['Etwa 1–2 %','Etwa 10 %','Etwa 25 %','Alles'],e:'Kleines Risiko pro Trade = das Konto überlebt auch Verlustserien.',l:'positionsgroesse'},
+ {q:'Ein Hammer ist am stärksten …',a:['nach einem Fall an einer Unterstützung','mitten in einer Seitwärtsphase','nach einem starken Anstieg','an jeder beliebigen Stelle'],e:'Ort und Bestätigung sind wichtiger als die Farbe des Hammers.',l:'hammer'}
+];
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+let Q=null;
+function startQuiz(){
+ current=null;P.L=null;P.cv=null;
+ const pics=shuffle(LESSONS.filter(l=>l.cat==='kerzen'||l.cat==='formation')).slice(0,4).map(L=>{
+  const others=shuffle(LESSONS.filter(l=>l.cat===L.cat&&l.id!==L.id)).slice(0,3).map(l=>l.title);
+  return{pic:L,q:L.cat==='kerzen'?'Welches Kerzenmuster ist markiert?':'Welche Chartformation siehst du?',opts:shuffle([L.title,...others]),ans:L.title,e:L.box.was,l:L.id};});
+ const txt=shuffle(TQ.slice()).slice(0,6).map(x=>({q:x.q,opts:shuffle(x.a.slice()),ans:x.a[0],e:x.e,l:x.l}));
+ Q={list:shuffle([...pics,...txt]),i:0,score:0,wrong:[]};renderList();renderQ();
+}
+function renderQ(){
+ const it=Q.list[Q.i],n=Q.list.length;
+ view.innerHTML=`<button class="back" id="back">‹ Startseite</button>
+ <div class="kicker">Quiz · Frage ${Q.i+1} von ${n} · ${Q.score} richtig</div><h1>Teste dein Wissen</h1>
+ <div class="qcard"><div class="qbar"><i style="width:${Q.i/n*100}%"></i></div>
+ <p class="qq">${it.q}</p>${it.pic?'<div class="qcv"><canvas id="qcv"></canvas></div>':''}
+ <div class="opts">${it.opts.map((o,k)=>`<button class="opt" data-k="${k}">${String.fromCharCode(65+k)}) ${o}</button>`).join('')}</div>
+ <div id="fb"></div></div>`;
+ document.getElementById('back').onclick=()=>{location.hash='';};
+ if(it.pic)drawStatic(document.getElementById('qcv'),it.pic);
+ view.querySelectorAll('.opt').forEach(b=>b.onclick=()=>answer(+b.dataset.k));window.scrollTo(0,0);
+}
+function answer(k){
+ const it=Q.list[Q.i],ok=it.opts[k]===it.ans;if(ok)Q.score++;else Q.wrong.push(it.l);
+ view.querySelectorAll('.opt').forEach((b,j)=>{b.disabled=true;if(it.opts[j]===it.ans)b.classList.add('ok');else if(j===k)b.classList.add('bad');});
+ const last=Q.i===Q.list.length-1,L=LESSONS.find(x=>x.id===it.l);
+ document.getElementById('fb').innerHTML=`<div class="fb"><b style="color:${ok?'var(--up)':'var(--down)'}">${ok?'✓ RICHTIG!':'✗ LEIDER FALSCH'}</b>${ok?'':` – richtig ist: <b>${it.ans}</b>`}<br>${it.e}</div>
+ <div class="qnav"><button id="tol">📖 Lektion: ${L?L.title:''}</button><button class="main" id="nx">${last?'Ergebnis ansehen':'Weiter ›'}</button></div>`;
+ document.getElementById('tol').onclick=()=>location.hash=it.l;
+ document.getElementById('nx').onclick=()=>{if(last)renderResult();else{Q.i++;renderQ();}};
+}
+function renderResult(){
+ const n=Q.list.length,sc=Q.score;if(sc>best){best=sc;try{localStorage.setItem('cs-best',best)}catch(e){}}renderList();
+ const msg=sc===n?'Perfekt! Du bist ein echter Chart-Profi. 🏆':sc>=8?'Sehr stark! Fast alles richtig. 💪':sc>=5?'Gut! Ein paar Lektionen kannst du noch wiederholen.':'Nicht schlimm – schau dir die Lektionen unten nochmal an und versuch es erneut.';
+ const rep=[...new Set(Q.wrong)].map(id=>LESSONS.find(l=>l.id===id)).filter(Boolean);
+ view.innerHTML=`<button class="back" id="back">‹ Startseite</button><div class="kicker">Quiz · Ergebnis</div><h1>Geschafft!</h1>
+ <div class="qcard"><div class="score" style="color:${sc>=8?'var(--up)':sc>=5?'var(--gold)':'var(--down)'}">${sc} / ${n}</div><p style="font-size:16px;margin:0 0 6px">${msg}</p>
+ <p style="color:var(--mute);font-family:var(--mono);font-size:12px;margin:0">BESTWERT: ${best} / ${n}</p>
+ ${rep.length?`<p style="margin:16px 0 6px;font-weight:700">Diese Lektionen solltest du wiederholen:</p><div class="opts">${rep.map(l=>`<button class="opt" data-id="${l.id}">📖 ${l.title}</button>`).join('')}</div>`:''}
+ <div class="qnav"><button id="home">Zur Übersicht</button><button class="main" id="again">🎯 Neues Quiz</button></div></div>`;
+ document.getElementById('back').onclick=()=>{location.hash='';};
+ view.querySelectorAll('.opt[data-id]').forEach(b=>b.onclick=()=>location.hash=b.dataset.id);
+ document.getElementById('home').onclick=()=>{location.hash='';};
+ document.getElementById('again').onclick=()=>{startQuiz();};
+}
+function drawStatic(cv,L){
+ prepare(L);const w=cv.parentElement.clientWidth,h=Math.round(Math.min(320,Math.max(220,w*.56))),dpr=window.devicePixelRatio||1;
+ cv.width=w*dpr;cv.height=h*dpr;cv.style.height=h+'px';const ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
+ const save={ctx:P.ctx,W:P.W,H:P.H,L:P.L,t:P.t,tl:P.tl,cv:P.cv},z=QZ[L.id];
+ Object.assign(P,{ctx,W:w,H:h,L,t:10,tl:{cseg:[{t0:0,t1:1,from:0,to:L.data.length}],ovs:z?[{o:{t:'zone',i1:z[0],i2:z[1],col:'#c9d2de'},t0:0,t1:1}]:[],steps:[]}});
+ ctx.fillStyle=C.bg;ctx.fillRect(0,0,w,h);drawChart();Object.assign(P,save);
+}
+
+/* ============ Zeichnen ============ */
+function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function pill(ctx,x,y,text,col,alpha=1,align='center',W=P.W){
+ if(alpha<=0)return;ctx.save();ctx.globalAlpha=alpha;ctx.font=`700 11px ${MONO}`;
+ const w=ctx.measureText(text).width+14,h=20;let x0=align==='center'?x-w/2:align==='left'?x:x-w;
+ x0=Math.max(2,Math.min(W-w-2,x0));const y0=y-h/2;
+ ctx.fillStyle='rgba(2,4,7,.88)';rr(ctx,x0,y0,w,h,5);ctx.fill();ctx.strokeStyle=col;ctx.lineWidth=1.2;ctx.stroke();
+ ctx.fillStyle=col;ctx.textBaseline='middle';ctx.textAlign='left';ctx.fillText(text,x0+7,y+.5);ctx.restore();
+}
+function arrowHead(ctx,x1,y1,x2,y2,col){const a=Math.atan2(y2-y1,x2-x1),s=8;ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-s*Math.cos(a-.45),y2-s*Math.sin(a-.45));ctx.lineTo(x2-s*Math.cos(a+.45),y2-s*Math.sin(a+.45));ctx.closePath();ctx.fill();}
+
+function drawChart(){
+ const {ctx,W,H,L,t}=P,d=L.data,n=d.length,v=visibleAt(t),vi=Math.floor(v),fr=v-vi;
+ const panel=L.panel,ph=panel?118:0;
+ const left=8,right=W-54,top=22,mainB=H-ph-(panel?26:22);
+ let lo=L.lo,hi=L.hi;const pad=(hi-lo)*.1;lo-=pad;hi+=pad;
+ const cw=(right-left)/n,X=i=>left+(i+.5)*cw,Y=p=>top+(hi-p)/(hi-lo)*(mainB-top);
+ const g={ctx,X,Y,cw,top,mainB,left,right,n,v,vi,d,W};
+ // Raster
+ const rawStep=(hi-lo)/5,mag=Math.pow(10,Math.floor(Math.log10(rawStep)));const step=[1,2,2.5,5,10].map(m=>m*mag).find(s=>s>=rawStep);
+ ctx.font=`500 10.5px ${MONO}`;ctx.textBaseline='middle';ctx.textAlign='left';
+ for(let p=Math.ceil(lo/step)*step;p<=hi;p+=step){const y=Y(p);ctx.strokeStyle=C.grid;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(right,y);ctx.stroke();ctx.fillStyle=C.axis;ctx.fillText(fmt(p,step<1?1:0),right+8,y);}
+ ctx.strokeStyle='#1b2532';ctx.beginPath();ctx.moveTo(right,top-10);ctx.lineTo(right,mainB+8);ctx.stroke();
+ // Overlays (hinten)
+ const act=P.tl.ovs.filter(x=>t>=x.t0).map(x=>({o:x.o,p:clamp((t-x.t0)/(x.t1-x.t0))}));
+ act.filter(a=>['zone','band','fib','pos'].includes(a.o.t)).forEach(a=>drawOv(g,a.o,ease(a.p),'back'));
+ // Kerzen
+ const bw=Math.max(2,Math.min(16,cw*.66));
+ const cnt=Math.min(n,vi+(fr>0.01?1:0));
+ for(let i=0;i<cnt;i++){
+  let {o,h,l,c}=d[i];
+  if(i===vi){const f=ease(fr);const cc=o+(c-o)*f;h=Math.max(o,cc)+(h-Math.max(o,c))*f;l=Math.min(o,cc)-(Math.min(o,c)-l)*f;c=cc;}
+  const col=c>=o?C.up:C.down,x=X(i);
+  ctx.strokeStyle=col;ctx.lineWidth=Math.max(1,Math.min(1.6,cw*.12));ctx.beginPath();ctx.moveTo(x,Y(h));ctx.lineTo(x,Y(l));ctx.stroke();
+  const y1=Y(Math.max(o,c)),y2=Y(Math.min(o,c));ctx.fillStyle=col;ctx.fillRect(x-bw/2,y1,bw,Math.max(1.2,y2-y1));
+ }
+ // aktueller Preis
+ if(cnt>0){const i=cnt-1;const c=i===vi?d[i].o+(d[i].c-d[i].o)*ease(fr):d[i].c;const col=c>=d[i].o?C.up:C.down,y=Y(c);
+  ctx.save();ctx.setLineDash([2,3]);ctx.strokeStyle=hexA(col,.7);ctx.beginPath();ctx.moveTo(X(i)+bw/2,y);ctx.lineTo(right,y);ctx.stroke();ctx.restore();
+  ctx.fillStyle=col;rr(ctx,right+2,y-9,W-right-4,18,4);ctx.fill();ctx.fillStyle='#02130c';ctx.font=`800 10.5px ${MONO}`;ctx.fillText(fmt(c),right+7,y+.5);}
+ // Overlays (vorne)
+ act.filter(a=>!['zone','band','fib','pos'].includes(a.o.t)).forEach(a=>drawOv(g,a.o,ease(a.p),'front'));
+ act.filter(a=>a.o.t==='fib').forEach(a=>drawOv(g,a.o,ease(a.p),'front'));
+ // Panel
+ if(panel){const pt=mainB+38,pb=H-10;ctx.strokeStyle='#1b2532';ctx.beginPath();ctx.moveTo(0,mainB+13);ctx.lineTo(W,mainB+13);ctx.stroke();
+  ctx.font=`700 10.5px ${MONO}`;ctx.textAlign='left';
+  if(panel==='rsi'){const Y2=x=>pt+(100-x)/100*(pb-pt);
+   ctx.fillStyle=hexA(C.purple,.06);ctx.fillRect(left,Y2(70),right-left,Y2(30)-Y2(70));
+   [[70,C.down,'70 ÜBERKAUFT'],[30,C.up,'30 ÜBERVERKAUFT']].forEach(([lv,col,tx])=>{ctx.save();ctx.setLineDash([4,4]);ctx.strokeStyle=hexA(col,.7);ctx.beginPath();ctx.moveTo(left,Y2(lv));ctx.lineTo(right,Y2(lv));ctx.stroke();ctx.restore();ctx.fillStyle=col;ctx.fillText(String(lv),right+8,Y2(lv));ctx.globalAlpha=.75;ctx.fillText(tx.slice(3),left+4,Y2(lv)+(lv===70?-8:9));ctx.globalAlpha=1;});
+   const r=L.rsi;ctx.lineWidth=1.8;ctx.strokeStyle=C.purple;ctx.beginPath();let st=false;
+   for(let i=0;i<cnt;i++){if(r[i]==null)continue;const y=Y2(r[i]);if(!st){ctx.moveTo(X(i),y);st=true}else ctx.lineTo(X(i),y);}ctx.stroke();
+   // Extrembereiche einfärben
+   for(let i=1;i<cnt;i++){if(r[i]==null)continue;if(r[i]>70||r[i]<30){ctx.fillStyle=r[i]>70?hexA(C.down,.5):hexA(C.up,.5);ctx.beginPath();ctx.arc(X(i),Y2(r[i]),2.2,0,7);ctx.fill();}}
+   ctx.fillStyle=C.purple;ctx.fillText('RSI (14)',left+4,pt-6);
+  } else {const mv=Math.max(...d.map(c=>c.v));
+   for(let i=0;i<cnt;i++){const c=d[i],hgt=(pb-pt)*c.v/mv*(i===vi?ease(fr):1);ctx.fillStyle=hexA(c.c>=c.o?C.up:C.down,c.v>mv*.5?.95:.5);ctx.fillRect(X(i)-bw/2,pb-hgt,bw,hgt);}
+   ctx.fillStyle=C.axis;ctx.fillText('VOLUMEN',left+4,pt-6);}
+ }
+}
+
+function drawOv(g,o,p,layer){
+ const {ctx,X,Y,cw}=g,col=o.col||C.gold;
+ switch(o.t){
+ case 'line':{const ext=o.ext||0,sl=(o.b[1]-o.a[1])/(o.b[0]-o.a[0]);const x1=X(o.a[0]),y1=Y(o.a[1]),x2=X(o.b[0]+ext),y2=Y(o.b[1]+sl*ext);
+  const xe=x1+(x2-x1)*p,ye=y1+(y2-y1)*p;ctx.save();ctx.strokeStyle=col;ctx.lineWidth=2.2;ctx.shadowColor=col;ctx.shadowBlur=6;if(o.dash)ctx.setLineDash([6,5]);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(xe,ye);ctx.stroke();ctx.restore();
+  dot(ctx,x1,y1,col);if(p>.4)dot(ctx,X(o.b[0]),Y(o.b[1]),col);
+  if(o.label)pill(ctx,xe,ye-16,o.label,col,clamp((p-.75)/.25));break;}
+ case 'h':{const x1=X(o.from??0)-cw/2,x2=X(o.to??g.n-1)+cw/2,y=Y(o.p),xe=x1+(x2-x1)*p;
+  ctx.save();ctx.strokeStyle=col;ctx.lineWidth=2;ctx.setLineDash(o.dash?[3,4]:[8,5]);ctx.shadowColor=col;ctx.shadowBlur=5;ctx.beginPath();ctx.moveTo(x1,y);ctx.lineTo(xe,y);ctx.stroke();ctx.restore();
+  if(o.label)pill(ctx,o.lab!=null?X(o.lab)-cw/2:x1+4,o.lpos==='below'?y+15:y-15,o.label,col,clamp((p-.3)/.4),'left');
+  if(p>.95&&!o.noTag){ctx.fillStyle=col;rr(ctx,g.right+2,y-9,g.W-g.right-4,18,4);ctx.fill();ctx.fillStyle='#05080d';ctx.font=`800 10.5px ${MONO}`;ctx.textBaseline='middle';ctx.textAlign='left';ctx.fillText(fmt(o.p),g.right+7,y+.5);}
+  break;}
+ case 'zone':{const hi=hiR(g.d,o.i1,o.i2),lo=loR(g.d,o.i1,o.i2);const x1=X(o.i1)-cw*.85,x2=X(o.i2)+cw*.85,y1=Y(hi)-7,y2=Y(lo)+7;
+  ctx.save();ctx.globalAlpha=p;ctx.fillStyle=hexA(col,.13);rr(ctx,x1,y1,x2-x1,y2-y1,6);ctx.fill();ctx.setLineDash([4,3]);ctx.strokeStyle=col;ctx.lineWidth=1.3;ctx.stroke();ctx.restore();
+  if(o.label)pill(ctx,(x1+x2)/2,o.below?y2+16:y1-16,o.label,col,p);break;}
+ case 'label':{const x=X(o.i),y=Y(o.p),below=o.pos==='below',off=(1-p)*8;const ly=below?y+26+off:y-26-off;
+  ctx.save();ctx.globalAlpha=p;ctx.strokeStyle=col;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,below?y+4:y-4);ctx.lineTo(x,below?ly-10:ly+10);ctx.stroke();ctx.restore();
+  pill(ctx,x,ly,o.text,col,p);break;}
+ case 'pos':{const x1=X(o.i1)-cw/2,x2=x1+(X(o.i2)+cw/2-x1)*p,ye=Y(o.entry),ys=Y(o.stop);
+  ctx.fillStyle=hexA(C.down,.22);ctx.fillRect(x1,ye,x2-x1,ys-ye);
+  if(o.target!=null){const yt=Y(o.target);ctx.fillStyle=hexA(C.up,.2);ctx.fillRect(x1,yt,x2-x1,ye-yt);
+   pill(ctx,x1+6,(yt+ye)/2,'CHANCE '+fmt(o.target-o.entry)+' €',C.up,clamp((p-.5)/.5),'left');}
+  ctx.strokeStyle='#e6ecf3';ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(x1,ye);ctx.lineTo(x2,ye);ctx.stroke();
+  pill(ctx,x1+6,(ye+ys)/2,'RISIKO '+fmt(o.entry-o.stop)+' €',C.down,clamp((p-.5)/.5),'left');
+  if(o.target!=null)pill(ctx,x2-6,ye,'CRV 1 : '+fmt((o.target-o.entry)/(o.entry-o.stop)),'#e6ecf3',clamp((p-.8)/.2),'right');
+  else pill(ctx,x2-6,ye,'EINSTIEG','#e6ecf3',clamp((p-.8)/.2),'right');
+  break;}
+ case 'mark':{const x=X(o.i),y=Y(o.p),below=o.pos==='below';ctx.save();ctx.globalAlpha=p;ctx.fillStyle=col;ctx.beginPath();ctx.arc(x,y+(below?3:-3),3.5,0,7);ctx.fill();ctx.restore();
+  pill(ctx,x,below?y+20:y-20,o.text,col,p);break;}
+ case 'path':{const pts=o.pts.map(q=>[X(q[0]),Y(q[1])]);let tot=0;const seg=[];for(let i=1;i<pts.length;i++){const s=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);seg.push(s);tot+=s;}
+  let rem=tot*p;ctx.save();ctx.strokeStyle=col;ctx.lineWidth=2;ctx.shadowColor=col;ctx.shadowBlur=6;ctx.beginPath();ctx.moveTo(...pts[0]);
+  for(let i=1;i<pts.length&&rem>0;i++){const f=Math.min(1,rem/seg[i-1]);ctx.lineTo(pts[i-1][0]+(pts[i][0]-pts[i-1][0])*f,pts[i-1][1]+(pts[i][1]-pts[i-1][1])*f);rem-=seg[i-1];}ctx.stroke();ctx.restore();break;}
+ case 'arrow':{const x1=X(o.a[0]),y1=Y(o.a[1]),x2=X(o.b[0]),y2=Y(o.b[1]),xe=x1+(x2-x1)*p,ye=y1+(y2-y1)*p;
+  ctx.save();ctx.strokeStyle=col;ctx.lineWidth=2;ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(xe,ye);ctx.stroke();ctx.restore();
+  if(p>.05)arrowHead(ctx,x1,y1,xe,ye,col);
+  if(o.label)pill(ctx,(x1+xe)/2+(Math.abs(x2-x1)<4?8:12),(y1+ye)/2,o.label,col,clamp((p-.5)/.5),'left');break;}
+ case 'fib':{const lv=[0,.236,.382,.5,.618,.786,1],cols=['#8a96a8','#6f8fb8','#4c9aff',C.gold,C.gold,C.orange,'#8a96a8'];
+  const pr=l=>o.p2-(o.p2-o.p1)*l,x1=X(o.i1)-cw/2,x2=g.right;
+  if(layer==='back'){const gp=clamp((p-.75)/.25);if(gp>0){ctx.fillStyle=hexA(C.gold,.16*gp);ctx.fillRect(x1,Y(pr(.5)),x2-x1,Y(pr(.618))-Y(pr(.5)));}
+   const dp=clamp(p*1.4);ctx.save();ctx.globalAlpha=.6*dp;ctx.strokeStyle='#8a96a8';ctx.setLineDash([3,4]);ctx.beginPath();ctx.moveTo(X(o.i1),Y(o.p1));ctx.lineTo(X(o.i1)+(X(o.i2)-X(o.i1))*dp,Y(o.p1)+(Y(o.p2)-Y(o.p1))*dp);ctx.stroke();ctx.restore();break;}
+  lv.forEach((l,k)=>{const q=clamp(p*1.6-k*.09);if(q<=0)return;const y=Y(pr(l)),xe=x1+(x2-x1)*q;
+   ctx.save();ctx.strokeStyle=cols[k];ctx.lineWidth=(l===.5||l===.618)?1.8:1.1;ctx.beginPath();ctx.moveTo(x1,y);ctx.lineTo(xe,y);ctx.stroke();ctx.restore();
+   if(q>.9){ctx.save();ctx.globalAlpha=clamp((q-.9)*10);ctx.fillStyle=cols[k];rr(ctx,g.right+2,y-8,g.W-g.right-4,16,4);ctx.fill();ctx.fillStyle='#05080d';ctx.font=`800 10px ${MONO}`;ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText(fmt(l,3).replace(/0+$/,'').replace(/,$/,''),g.right+6,y+.5);ctx.restore();}});
+  const gp=clamp((p-.8)/.2);if(gp>0)pill(ctx,x1+6,(Y(pr(.5))+Y(pr(.618)))/2,'GOLDEN ZONE',C.gold,gp,'left');break;}
+ case 'sma':{const s=o._s,lim=Math.min(g.vi,Math.round((g.n-1)*p));ctx.save();ctx.strokeStyle=col;ctx.lineWidth=2.2;ctx.shadowColor=col;ctx.shadowBlur=4;ctx.beginPath();let st=false,lx=0,ly=0;
+  for(let i=0;i<=lim&&i<s.length;i++){if(s[i]==null)continue;const x=X(i),y=Y(s[i]);if(!st){ctx.moveTo(x,y);st=true}else ctx.lineTo(x,y);lx=x;ly=y;}ctx.stroke();ctx.restore();
+  if(st&&o.label)pill(ctx,lx-8,ly+(o.n<20?-16:18),o.label,col,clamp((p-.8)/.2),'right');break;}
+ case 'cross':{if(o._i<0||g.vi<o._i)return;const x=X(o._i),y=Y(o._p);ctx.save();ctx.globalAlpha=p;ctx.strokeStyle=C.gold;ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(x,y,9+(1-p)*14,0,7);ctx.stroke();ctx.restore();
+  pill(ctx,x,y-34,'GOLDEN CROSS ✦',C.gold,p);break;}
+ }
+}
+function dot(ctx,x,y,col){ctx.fillStyle=col;ctx.beginPath();ctx.arc(x,y,3.4,0,7);ctx.fill();ctx.strokeStyle='#020407';ctx.lineWidth=1.5;ctx.stroke();}
+
+/* ---- Spezial: Anatomie einer Kerze (Stil wie Lern-Shorts) ---- */
+function pathState(Pth,f){const pos=f*(Pth.length-1),i=Math.floor(pos),fr=pos-i;const cur=i>=Pth.length-1?Pth[Pth.length-1]:Pth[i]+(Pth[i+1]-Pth[i])*ease(fr);
+ let h=Math.max(Pth[0],cur),l=Math.min(Pth[0],cur);for(let k=0;k<=Math.min(i,Pth.length-1);k++){h=Math.max(h,Pth[k]);l=Math.min(l,Pth[k]);}return{o:Pth[0],c:cur,h,l};}
+function drawAnatomy(){
+ const {ctx,W,H,t}=P;const lo=91,hi=115,top=70,bot=H-56;const Y=p=>top+(hi-p)/(hi-lo)*(bot-top);
+ const G=[100,98.5,96,97.5,101,104,102.5,108,112,109.5,107],R=[107,109,111,108.5,104,101.5,99,94,96,97];
+ const red=t>=13300,Pth=red?R:G,f=red?clamp((t-13800)/5600):clamp((t-900)/6000);
+ const fade=red?clamp((t-13300)/500):1;
+ // Titel
+ ctx.textAlign='center';ctx.textBaseline='alphabetic';ctx.fillStyle=C.mute;ctx.font=`500 ${W<420?10:11}px ${MONO}`;ctx.fillText('CHART-SCHULE · KERZE',W/2,22);
+ ctx.fillStyle=C.text;ctx.font=`800 ${W<420?22:28}px ${MONO}`;ctx.fillText('ANATOMIE',W/2,50);
+ ctx.fillStyle=C.mute;ctx.font=`500 ${W<420?10.5:12}px ${MONO}`;ctx.fillText(red?'(ROTE KERZE)':'(GRÜNE KERZE)',W/2,66);
+ if(!red&&t<900){ctx.fillStyle=C.mute;ctx.font=`600 12px ${MONO}`;ctx.fillText('10:00 – 11:00 UHR',W/2,(top+bot)/2);return;}
+ const s=pathState(Pth,f),up=s.c>=s.o,col=up?C.up:C.down,x=W*.5,bw=Math.min(70,Math.max(40,W*.13));
+ ctx.globalAlpha=fade;
+ // Docht + Körper
+ ctx.strokeStyle=col;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(x,Y(s.h));ctx.lineTo(x,Y(s.l));ctx.stroke();
+ const y1=Y(Math.max(s.o,s.c)),y2=Y(Math.min(s.o,s.c));ctx.fillStyle=col;ctx.fillRect(x-bw/2,y1,bw,Math.max(2,y2-y1));
+ // Preis-Punkt
+ if(f<1){const py=Y(s.c);ctx.save();ctx.shadowColor='#fff';ctx.shadowBlur=14;ctx.fillStyle='#f4f7fb';ctx.beginPath();ctx.arc(x,py,7,0,7);ctx.fill();ctx.restore();
+  ctx.save();ctx.setLineDash([3,4]);ctx.strokeStyle='rgba(244,247,251,.45)';ctx.beginPath();ctx.moveTo(x+bw/2+6,py);ctx.lineTo(W-6,py);ctx.stroke();ctx.restore();
+  ctx.fillStyle='#f4f7fb';ctx.font=`800 11px ${MONO}`;ctx.textAlign='right';ctx.textBaseline='bottom';ctx.fillText('PREIS '+fmt(s.c),W-8,py-4);
+  const startH=red?11:10,min=Math.floor(f*60);ctx.textAlign='center';ctx.textBaseline='alphabetic';ctx.fillStyle=C.gold;ctx.font=`700 13px ${MONO}`;
+  ctx.fillText(`⏱ ${String(startH).padStart(2,'0')}:${String(min).padStart(2,'0')} UHR`,W/2,H-22);}
+ else{ctx.textAlign='center';ctx.fillStyle=col;ctx.font=`800 ${W<420?14:17}px ${MONO}`;ctx.fillText(up?'▲ BULLISCH – KÄUFER GEWINNEN':'▼ BÄRISCH – VERKÄUFER GEWINNEN',W/2,H-22);}
+ // Beschriftungen rechts (gestrichelte Linien)
+ const base=red?19600:7200,lab=(i)=>clamp((t-base-i*380)/400);
+ const fs=W<420?12:15,lx=x+bw/2+(W<420?50:80);
+ const right=(p,txt,c,i,fromX)=>{const a=lab(i);if(a<=0)return;ctx.save();ctx.globalAlpha=a*fade;ctx.setLineDash([6,5]);ctx.strokeStyle=c;ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(fromX+4,Y(p));ctx.lineTo(fromX+4+(lx-fromX-12)*a,Y(p));ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle=c;ctx.font=`800 ${fs}px ${MONO}`;ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText(txt,lx,Y(p));ctx.restore();};
+ if(f>=1){
+  right(s.h,'HOCH',C.up,0,x);
+  right(red?s.o:s.c,red?'ERÖFFNUNG':'SCHLUSS','#e6ecf3',1,x+bw/2);
+  right(red?s.c:s.o,red?'SCHLUSS':'ERÖFFNUNG','#e6ecf3',2,x+bw/2);
+  right(s.l,'TIEF',C.down,3,x);
+  // links: Docht / Körper (gelb)
+  const kb=red?clamp((t-21300)/500):clamp((t-9300)/500),db=red?clamp((t-21800)/500):clamp((t-9900)/500);
+  const bx=x-bw/2-12;ctx.save();ctx.strokeStyle=C.gold;ctx.fillStyle=C.gold;ctx.lineWidth=2.4;ctx.font=`800 ${fs}px ${MONO}`;ctx.textAlign='right';ctx.textBaseline='middle';
+  if(kb>0){ctx.globalAlpha=kb*fade;ctx.beginPath();ctx.moveTo(bx+8,y1);ctx.lineTo(bx,y1);ctx.lineTo(bx,y2);ctx.lineTo(bx+8,y2);ctx.stroke();ctx.fillText('KÖRPER',bx-8,(y1+y2)/2);}
+  if(db>0){ctx.globalAlpha=db*fade;ctx.fillText('DOCHT',x-10,(Y(s.h)+y1)/2);ctx.fillText('DOCHT',x-10,(Y(s.l)+y2)/2);}
+  ctx.restore();
+ }
+ // Eröffnungs-Markierung während der Entstehung
+ if(f<1){ctx.save();ctx.setLineDash([4,4]);ctx.strokeStyle='rgba(230,236,243,.35)';ctx.beginPath();ctx.moveTo(x-bw/2-40,Y(s.o));ctx.lineTo(x-bw/2-4,Y(s.o));ctx.stroke();ctx.restore();
+  ctx.fillStyle='rgba(230,236,243,.7)';ctx.font=`700 10.5px ${MONO}`;ctx.textAlign='right';ctx.textBaseline='bottom';ctx.fillText('ERÖFFNUNG',x-bw/2-6,Y(s.o)-3);}
+ ctx.globalAlpha=1;
+}
+
+/* ---- Schleife ---- */
+function frame(ts){
+ const dt=P.last?Math.min(60,ts-P.last):0;P.last=ts;
+ if(P.L&&P.cv){
+  if(P.playing){P.t+=dt*P.speed;if(P.t>=P.tl.total){P.t=P.tl.total;P.playing=false;updBtn();markSeen(P.L.id);}P.dirty=true;}
+  if(P.dirty){
+   const {ctx,W,H}=P;ctx.clearRect(0,0,W,H);ctx.fillStyle=C.bg;ctx.fillRect(0,0,W,H);
+   if(P.L.custom)drawAnatomy();else drawChart();
+   const sk=document.getElementById('seek');if(sk)sk.value=P.t;
+   let si=0;P.tl.steps.forEach((s,i)=>{if(P.t>=s.t)si=i;});
+   if(si!==P.stepIdx){P.stepIdx=si;const cp=document.getElementById('captxt');cp.style.opacity=0;setTimeout(()=>{cp.textContent=P.tl.steps[si].text;cp.style.opacity=1;},120);
+    document.getElementById('stepno').textContent=`SCHRITT ${si+1} / ${P.tl.steps.length}`;
+    document.querySelectorAll('.chip').forEach((c,i)=>{c.classList.toggle('on',i===si);c.classList.toggle('done',i<si);});}
+   P.dirty=false;
+  }
+ }
+ requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>P.dirty=true);
+
+function route(){const id=location.hash.slice(1);if(id==='quiz')startQuiz();else if(id.startsWith('kat-'))showCat(id.slice(4));else if(id)openLesson(id);else showHome();}
+window.addEventListener('hashchange',route);
+updProg();route();
+</script>
+</body>
+</html>
