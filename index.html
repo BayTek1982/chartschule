@@ -579,6 +579,208 @@ add({id:'psychologie',cat:'risiko',title:'FOMO & Rache-Trades',sub:'Die größte
   bedeutung:'Emotionale Trades haben keinen Plan, keinen Stop und kein CRV – deshalb gehen sie meistens schief.',
   tipp:'Schreib vor jedem Trade auf: Einstieg, Stop, Ziel, CRV. Kein Plan = kein Trade. Nach zwei Verlusten am Tag: Pause.'}});
 
+/* ---- PAKET 2: weitere Kerzenmuster ---- */
+add({id:'insidebar',cat:'kerzen',title:'Inside Bar',sub:'Kleine Kerze in der großen',icon:'insidebar',
+ make(){const d=build([[0,100],[10,110],[11,114.5],[12,112.8],[13,116],[20,122]],{seed:60,noise:.45,set:{11:{o:110,c:114.5,h:115,l:109.5},12:{o:113.5,c:112.8,h:114,l:112.2}}});
+  return{data:d,steps:[
+   {to:12,text:'Eine große Kerze – die MUTTERKERZE. Sie steckt den Rahmen ab.',ov:[{t:'zone',i1:11,i2:11,col:C.blue,label:'MUTTERKERZE'}]},
+   {to:13,text:'Die nächste Kerze bleibt komplett innerhalb von Hoch und Tief der Mutterkerze: die INSIDE BAR. Der Markt sammelt Kraft.',ov:[{t:'zone',i1:12,i2:12,col:C.gold,label:'INSIDE BAR',below:true}]},
+   {text:'Wir markieren Hoch und Tief der Mutterkerze. Der Ausbruch aus diesem Rahmen zeigt die Richtung.',ov:[{t:'h',p:115,col:C.up,label:'HOCH',from:11,to:20,lab:16,lpos:'below',dash:true},{t:'h',p:109.5,col:C.down,label:'TIEF',from:11,to:20,lab:16,lpos:'below',dash:true}]},
+   {to:21,text:'Ausbruch nach oben – der Trend geht weiter.',hold:600}]};},
+ box:{was:'Eine Inside Bar ist eine Kerze, deren Hoch und Tief komplett innerhalb der vorherigen Kerze (Mutterkerze) liegen.',
+  erkennen:['Große Mutterkerze','Danach eine kleinere Kerze, ganz innerhalb ihrer Spanne','Farbe ist egal'],
+  bedeutung:'Pause und Unentschlossenheit – der Markt „lädt auf“. Der Ausbruch aus der Mutterkerze gibt oft die nächste Richtung vor.',
+  tipp:'Am stärksten in Trendrichtung. Viele setzen den Stop auf die andere Seite der Mutterkerze.'}});
+
+add({id:'harami',cat:'kerzen',title:'Harami',sub:'Kleine Kerze im großen Körper',icon:'harami',
+ make(){const d=build([[0,120],[11,108.5],[12,103],[13,104.8],[20,112]],{seed:62,noise:.45,set:{12:{o:108.5,c:103,h:108.8,l:102.6},13:{o:103.8,c:104.8,h:105.3,l:103.4}}});
+  return{data:d,steps:[
+   {to:13,text:'Abwärtstrend – und eine große rote Kerze.'},
+   {to:14,text:'Die nächste Kerze ist klein und liegt komplett im Körper der roten: ein bullisches HARAMI („schwanger“ auf Japanisch).',ov:[{t:'zone',i1:12,i2:13,col:C.up,label:'HARAMI',below:true}]},
+   {to:16,text:'Die nächsten Kerzen steigen weiter – Bestätigung.',ov:[{t:'label',i:15,p:d[15].h,text:'Bestätigung',col:C.up}]},
+   {to:21,text:'Der Verkaufsdruck ist weg, der Kurs dreht.',hold:600}]};},
+ box:{was:'Ein Zwei-Kerzen-Muster: Eine kleine Kerze liegt komplett im Körper der großen Kerze davor – das Gegenstück zum Engulfing.',
+  erkennen:['Große Kerze in Trendrichtung','Kleine Kerze in Gegenfarbe, im Körper der großen','Bullisch nach einem Fall, bärisch nach einem Anstieg'],
+  bedeutung:'Der Schwung des Trends bricht plötzlich ab – ein frühes Warnsignal für eine Wende.',
+  tipp:'Schwächer als ein Engulfing – unbedingt auf die Bestätigung warten.'}});
+
+add({id:'tweezer-bottom',cat:'kerzen',title:'Tweezer Bottom',sub:'Zwei Kerzen, gleiches Tief',icon:'tweezerb',
+ make(){const d=build([[0,118],[11,104],[12,101.6],[13,104.2],[20,112]],{seed:64,noise:.45,set:{12:{o:104,c:101.6,h:104.3,l:100},13:{o:101.6,c:104.2,h:104.6,l:100.05}}});
+  return{data:d,steps:[
+   {to:13,text:'Der Kurs fällt und macht ein Tief bei 100.'},
+   {to:14,text:'Die nächste Kerze testet genau dasselbe Tief – und dreht nach oben: TWEEZER BOTTOM (Pinzetten-Boden).',ov:[{t:'h',p:100,col:C.gold,label:'GLEICHES TIEF',from:10,to:16,lpos:'below'},{t:'zone',i1:12,i2:13,col:C.up,label:'TWEEZER BOTTOM'}]},
+   {to:21,text:'Zweimal abgelehnt – die Käufer übernehmen.',hold:600}]};},
+ box:{was:'Zwei aufeinanderfolgende Kerzen mit (fast) genau demselben Tief – wie die zwei Spitzen einer Pinzette.',
+  erkennen:['Nach einem Abwärtstrend','Zwei Kerzen mit gleichem Tief','Oft erst rot, dann grün'],
+  bedeutung:'Der Preis wurde zweimal hintereinander genau dort abgelehnt – eine kleine Unterstützung.',
+  tipp:'Das Gegenstück oben heißt Tweezer Top.'}});
+
+add({id:'tweezer-top',cat:'kerzen',title:'Tweezer Top',sub:'Zwei Kerzen, gleiches Hoch',icon:'tweezert',
+ make(){const d=build([[0,100],[11,114],[12,116.4],[13,113.8],[20,106]],{seed:66,noise:.45,set:{12:{o:114,c:116.4,h:118,l:113.7},13:{o:116.4,c:113.8,h:117.95,l:113.4}}});
+  return{data:d,steps:[
+   {to:13,text:'Der Kurs steigt und macht ein Hoch bei 118.'},
+   {to:14,text:'Die nächste Kerze scheitert genau am selben Hoch: TWEEZER TOP.',ov:[{t:'h',p:118,col:C.gold,label:'GLEICHES HOCH',from:10,to:16},{t:'zone',i1:12,i2:13,col:C.down,label:'TWEEZER TOP',below:true}]},
+   {to:21,text:'Zweimal abgelehnt – die Verkäufer übernehmen.',hold:600}]};},
+ box:{was:'Zwei aufeinanderfolgende Kerzen mit (fast) genau demselben Hoch.',
+  erkennen:['Nach einem Aufwärtstrend','Zwei Kerzen mit gleichem Hoch','Oft erst grün, dann rot'],
+  bedeutung:'Höhere Preise wurden zweimal genau dort abgelehnt – ein kleiner Widerstand.',
+  tipp:'Besonders stark, wenn das Hoch an einem bekannten Widerstand liegt.'}});
+
+add({id:'marubozu',cat:'kerzen',title:'Marubozu',sub:'Kerze ohne Dochte',icon:'marubozu',
+ make(){const d=build([[0,104],[12,106],[13,113],[20,118]],{seed:68,noise:.7,wick:.6,set:{13:{o:106,c:113,h:113,l:106}}});
+  return{data:d,steps:[
+   {to:13,text:'Der Kurs läuft seitwärts.'},
+   {to:14,text:'Plötzlich eine große grüne Kerze OHNE Dochte: ein MARUBOZU. Eröffnung = Tief, Schluss = Hoch.',ov:[{t:'zone',i1:13,i2:13,col:C.up,label:'MARUBOZU'}]},
+   {to:21,text:'Die Käufer hatten von der ersten bis zur letzten Sekunde die Kontrolle.',hold:600}]};},
+ box:{was:'Marubozu heißt auf Japanisch „kahl“: eine große Kerze ganz ohne (oder fast ohne) Dochte.',
+  erkennen:['Großer Körper','Kein oberer und kein unterer Docht','Grün = bullisch, rot = bärisch'],
+  bedeutung:'Eine Seite hat den ganzen Zeitraum dominiert – starkes Momentum, oft Start einer Bewegung.',
+  tipp:'Nach einem Marubozu kommt oft ein kleiner Rücksetzer in die Kerze – eine Chance zum Einstieg.'}});
+
+add({id:'hangingman',cat:'kerzen',title:'Hanging Man',sub:'Hammer-Form am Hoch',icon:'hanging',
+ make(){const d=build([[0,100],[12,116.3],[13,116.8],[14,114],[20,106]],{seed:70,noise:.45,set:{13:{o:116.3,c:116.8,h:117.1,l:111.5}}});
+  return{data:d,steps:[
+   {to:13,text:'Ein Aufwärtstrend.'},
+   {to:14,text:'Eine Kerze wie ein Hammer – aber ganz OBEN: der HANGING MAN (Gehängter).',ov:[{t:'zone',i1:13,i2:13,col:C.down,label:'HANGING MAN'}]},
+   {to:16,text:'Die nächsten Kerzen sind rot – die Warnung wird bestätigt.',ov:[{t:'label',i:15,p:d[15].l,text:'Bestätigung',col:C.down,pos:'below'}]},
+   {to:21,text:'Der Kurs fällt.',hold:600}]};},
+ box:{was:'Gleiche Form wie der Hammer (kleiner Körper oben, langer unterer Docht) – aber am Ende eines Aufwärtstrends.',
+  erkennen:['Nach einem Anstieg','Langer unterer Docht, kleiner Körper oben','Bestätigung durch eine rote Kerze danach'],
+  bedeutung:'Verkäufer konnten den Kurs schon stark drücken – ein erstes Zeichen von Schwäche.',
+  tipp:'Merke: Gleiche Kerze, anderer Ort, andere Bedeutung. Unten = Hammer, oben = Hanging Man.'}});
+
+add({id:'invhammer',cat:'kerzen',title:'Umgekehrter Hammer',sub:'Langer oberer Docht am Tief',icon:'invhammer',
+ make(){const d=build([[0,118],[12,103],[13,103.6],[14,106],[20,113]],{seed:72,noise:.45,set:{13:{o:103,c:103.6,h:108.5,l:102.8}}});
+  return{data:d,steps:[
+   {to:13,text:'Ein Abwärtstrend.'},
+   {to:14,text:'Kleiner Körper unten, langer oberer Docht – ganz UNTEN: der UMGEKEHRTE HAMMER.',ov:[{t:'zone',i1:13,i2:13,col:C.up,label:'UMGEKEHRTER HAMMER',below:true}]},
+   {to:15,text:'Die nächste Kerze schließt höher – Bestätigung.',ov:[{t:'label',i:14,p:d[14].h,text:'Bestätigung',col:C.up}]},
+   {to:21,text:'Die Käufer melden sich zurück.',hold:600}]};},
+ box:{was:'Gleiche Form wie der Shooting Star – aber am Ende eines Abwärtstrends.',
+  erkennen:['Nach einem Fall','Langer oberer Docht, kleiner Körper unten','Bestätigung durch eine grüne Kerze danach'],
+  bedeutung:'Käufer haben zum ersten Mal kräftig nach oben gedrückt – ein frühes Wendesignal.',
+  tipp:'Schwächer als ein Hammer – ohne Bestätigung nicht handeln.'}});
+
+add({id:'kraehen',cat:'kerzen',title:'Drei schwarze Krähen',sub:'Drei starke rote Kerzen',icon:'kraehen',
+ make(){const d=build([[0,104],[8,114],[11,115],[12,111],[13,107],[14,103],[20,99]],{seed:74,noise:.45,set:{12:{o:115,c:111,h:115.3,l:110.7},13:{o:111.4,c:107,h:111.7,l:106.7},14:{o:107.4,c:103,h:107.6,l:102.6}}});
+  return{data:d,steps:[
+   {to:12,text:'Der Kurs steigt und läuft oben seitwärts.'},
+   {to:15,text:'Drei große rote Kerzen hintereinander, jede schließt tiefer: DREI SCHWARZE KRÄHEN.',ov:[{t:'zone',i1:12,i2:14,col:C.down,label:'3 KRÄHEN',below:true}]},
+   {to:21,text:'Die Verkäufer haben klar übernommen.',hold:600}]};},
+ box:{was:'Drei aufeinanderfolgende große rote Kerzen mit kleinen Dochten – das Gegenstück zu den drei weißen Soldaten.',
+  erkennen:['Nach einem Anstieg','Drei rote Kerzen, jede schließt tiefer','Kleine untere Dochte'],
+  bedeutung:'Starker, gleichmäßiger Verkaufsdruck – oft der Start eines Abwärtstrends.',
+  tipp:'Nach so einem Abverkauf kommt oft eine kleine Erholung – nicht panisch hinterher verkaufen.'}});
+
+/* ---- PAKET 2: weitere Chartformationen ---- */
+add({id:'inverse-sks',cat:'formation',title:'Inverse SKS',sub:'Schulter-Kopf-Schulter auf dem Kopf',icon:'isks',
+ make(){const d=build([[0,118],[6,100],[10,107],[17,92],[22,107],[28,100],[33,109],[36,107],[44,122]],{seed:76,noise:.45,wick:.5});
+  return{data:d,steps:[
+   {to:11,text:'Ein erstes Tief – die LINKE SCHULTER.',ov:[{t:'label',i:6,p:d[6].l,text:'LINKE SCHULTER',col:C.gold,pos:'below'}]},
+   {to:23,text:'Ein noch tieferes Tief – der KOPF.',ov:[{t:'label',i:17,p:d[17].l,text:'KOPF',col:C.gold,pos:'below'}]},
+   {to:29,text:'Das nächste Tief bleibt höher – die RECHTE SCHULTER.',ov:[{t:'label',i:28,p:d[28].l,text:'RECHTE SCHULTER',col:C.gold,pos:'below'}]},
+   {text:'Die Hochs dazwischen bilden die NACKENLINIE.',ov:[{t:'h',p:107,col:C.blue,label:'NACKENLINIE',from:8,to:44}]},
+   {to:37,text:'Ausbruch über die Nackenlinie – mit Retest von oben.',ov:[{t:'label',i:33,p:d[33].h,text:'AUSBRUCH ▲',col:C.up}]},
+   {to:45,text:'Kursziel: Höhe vom Kopf bis zur Nackenlinie nach oben abtragen.',ov:[{t:'arrow',a:[17,92],b:[17,107],col:C.purple,label:'Höhe'},{t:'arrow',a:[38,107],b:[38,122],col:C.purple,label:'Ziel'}],hold:600}]};},
+ box:{was:'Die umgekehrte Schulter-Kopf-Schulter-Formation am Ende eines Abwärtstrends.',
+  erkennen:['Drei Tiefs, das mittlere ist das tiefste','Nackenlinie durch die Hochs dazwischen','Signal beim Ausbruch über die Nackenlinie'],
+  bedeutung:'Die Verkäufer schaffen kein neues Tief mehr – der Abwärtstrend dreht nach oben.',
+  tipp:'Steigendes Volumen beim Ausbruch macht das Signal deutlich stärker.'}});
+
+add({id:'dreieck-ab',cat:'formation',title:'Absteigendes Dreieck',sub:'Flacher Boden, fallende Hochs',icon:'dreieckab',
+ make(){const d=build([[0,112],[5,100],[10,109],[15,100],[19,106],[23,100],[26,103.5],[29,99],[34,92]],{seed:78,noise:.35,wick:.45});
+  return{data:d,steps:[
+   {to:16,text:'Der Kurs fällt immer wieder auf dieselbe Höhe.',ov:[{t:'h',p:100,col:C.up,label:'UNTERSTÜTZUNG',from:3,to:30,lpos:'below'}]},
+   {to:27,text:'Aber die Hochs werden immer tiefer – die Verkäufer drücken.',ov:[{t:'line',a:[10,d[10].h],b:[26,d[26].h],ext:4,col:C.down,label:'FALLENDE HOCHS'}]},
+   {to:35,text:'Die Unterstützung bricht: Ausbruch nach unten!',ov:[{t:'label',i:29,p:d[29].l,text:'BRUCH ▼',col:C.down,pos:'below'},{t:'arrow',a:[11,109],b:[11,100],col:C.purple,label:'Höhe'},{t:'arrow',a:[31,100],b:[31,91],col:C.purple,label:'Ziel'}],hold:600}]};},
+ box:{was:'Ein Dreieck mit waagerechter Unterstützung und fallenden Hochs – das Gegenstück zum aufsteigenden Dreieck.',
+  erkennen:['Mindestens zwei Tiefs auf gleicher Höhe','Mindestens zwei fallende Hochs','Der Kurs wird nach unten zusammengedrückt'],
+  bedeutung:'Meist bärisch: Die Verkäufer verkaufen immer früher, bis die Unterstützung bricht.',
+  tipp:'Kursziel: Höhe des Dreiecks ab dem Bruch nach unten abtragen.'}});
+
+add({id:'dreieck-sym',cat:'formation',title:'Symmetrisches Dreieck',sub:'Beide Linien laufen zusammen',icon:'dreiecksym',
+ make(){const d=build([[0,96],[4,114],[9,100],[14,111],[19,103],[23,108.3],[26,105.1],[28,107.5],[30,112],[36,119]],{seed:80,noise:.3,wick:.4});
+  return{data:d,steps:[
+   {to:27,text:'Die Hochs fallen, die Tiefs steigen – die Schwankungen werden immer kleiner.'},
+   {text:'Obere Linie: fallende Hochs.',ov:[{t:'line',a:[4,114.3],b:[14,111.3],ext:14,col:C.down}]},
+   {text:'Untere Linie: steigende Tiefs. Zusammen ein SYMMETRISCHES DREIECK.',ov:[{t:'line',a:[9,99.7],b:[19,102.7],ext:9,col:C.up,label:'DREIECK'}]},
+   {to:37,text:'Irgendwann muss der Kurs raus – hier nach oben. Oft geht es in Richtung des vorherigen Trends.',ov:[{t:'label',i:30,p:d[30].h,text:'AUSBRUCH ▲',col:C.gold}],hold:600}]};},
+ box:{was:'Ein Dreieck aus fallenden Hochs und steigenden Tiefs, die zu einer Spitze zusammenlaufen.',
+  erkennen:['Fallende Hochs UND steigende Tiefs','Beide Linien etwa gleich steil','Die Bewegungen werden immer kleiner'],
+  bedeutung:'Neutral: Käufer und Verkäufer sind im Gleichgewicht. Der Ausbruch entscheidet – meist in Richtung des Trends davor.',
+  tipp:'Warte den Ausbruch ab. Ausbrüche ganz an der Spitze sind oft schwach.'}});
+
+add({id:'flagge-baer',cat:'formation',title:'Bärische Flagge',sub:'Kurze Pause im Abwärtstrend',icon:'flaggebaer',
+ make(){const d=build([[0,132],[6,131],[12,114],[14,115],[16,117.5],[18,116],[20,119],[22,117.5],[24,120],[26,118.5],[29,111],[35,100]],{seed:82,noise:.35,wick:.45});
+  return{data:d,steps:[
+   {to:13,text:'Ein starker, schneller Fall – die FAHNENSTANGE.',ov:[{t:'arrow',a:[6,131],b:[12,114],col:C.purple,label:'Stange'}]},
+   {to:27,text:'Danach eine kurze, leicht steigende Pause – die FLAGGE.',ov:[{t:'line',a:[14,114.4],b:[22,116.9],ext:4,col:C.gold},{t:'line',a:[16,118.1],b:[24,120.6],ext:2,col:C.gold,label:'FLAGGE'}]},
+   {to:30,text:'Bruch nach unten – der Abwärtstrend geht weiter.',ov:[{t:'mark',i:28,p:d[28].l,text:'▼',col:C.down,pos:'below'}]},
+   {to:36,text:'Kursziel: Länge der Fahnenstange ab dem Bruch.',ov:[{t:'arrow',a:[30,117],b:[30,100],col:C.purple,label:'Ziel'}],hold:600}]};},
+ box:{was:'Das Spiegelbild der bullischen Flagge: starker Fall, dann eine kleine, leicht steigende Pause.',
+  erkennen:['Steiler Fall vorher','Kleiner, leicht steigender Kanal','Bruch nach unten'],
+  bedeutung:'Der Markt erholt sich nur kurz – danach geht der Abwärtstrend weiter.',
+  tipp:'Die Erholung in der Flagge ist meist schwach und mit wenig Volumen.'}});
+
+add({id:'wimpel',cat:'formation',title:'Wimpel',sub:'Mini-Dreieck nach starker Bewegung',icon:'wimpel',
+ make(){const d=build([[0,100],[5,101],[11,118],[13,114.5],[15,117],[17,115],[19,116.5],[21,115.4],[22,116],[25,122],[31,133]],{seed:84,noise:.3,wick:.35});
+  return{data:d,steps:[
+   {to:12,text:'Ein starker Anstieg – wieder eine Fahnenstange.',ov:[{t:'arrow',a:[5,101],b:[11,118],col:C.purple,label:'Stange'}]},
+   {to:23,text:'Danach ein kleines, symmetrisches Dreieck – der WIMPEL.',ov:[{t:'line',a:[11,118.4],b:[19,116.9],ext:3,col:C.gold},{t:'line',a:[13,114.1],b:[21,115.1],ext:1,col:C.gold,label:'WIMPEL'}]},
+   {to:32,text:'Ausbruch nach oben – der Trend geht weiter.',ov:[{t:'mark',i:24,p:d[24].h,text:'▲',col:C.up}],hold:600}]};},
+ box:{was:'Ein Wimpel ist wie eine Flagge – nur ist die Pause ein kleines symmetrisches Dreieck statt eines Kanals.',
+  erkennen:['Fahnenstange: starke, schnelle Bewegung','Kleines Dreieck mit zusammenlaufenden Linien','Ausbruch in Richtung der Stange'],
+  bedeutung:'Eine kurze Verschnaufpause – meist geht der Trend danach weiter.',
+  tipp:'Wimpel dauern meist nur wenige Kerzen. Dauert die Pause sehr lange, ist es eher ein normales Dreieck.'}});
+
+add({id:'keil-steigend',cat:'formation',title:'Steigender Keil',sub:'Steigt, aber verliert Kraft',icon:'keilup',
+ make(){const d=build([[0,100],[4,108],[8,104.5],[12,111.5],[16,109],[20,115],[23,112.6],[26,108],[32,100]],{seed:86,noise:.3,wick:.4});
+  return{data:d,steps:[
+   {to:21,text:'Der Kurs steigt – aber jede Welle nach oben wird kleiner.'},
+   {text:'Die Tiefs steigen steil …',ov:[{t:'line',a:[0,99.6],b:[8,104.1],ext:15,col:C.up}]},
+   {text:'… die Hochs steigen flacher. Die Linien laufen zusammen: STEIGENDER KEIL.',ov:[{t:'line',a:[4,108.4],b:[12,111.9],ext:11,col:C.down,label:'KEIL'}]},
+   {to:33,text:'Den Käufern geht die Luft aus – Bruch nach unten.',ov:[{t:'label',i:25,p:d[25].l,text:'BRUCH ▼',col:C.down,pos:'below'}],hold:600}]};},
+ box:{was:'Zwei steigende Linien, die zusammenlaufen. Die untere steigt steiler als die obere – das Gegenstück zum fallenden Keil.',
+  erkennen:['Steigende Hochs und steigende Tiefs','Die Abstände werden kleiner','Meist Bruch nach unten'],
+  bedeutung:'Der Aufwärtsdruck lässt nach – oft eine bärische Wende, obwohl der Kurs noch steigt.',
+  tipp:'Achte auf sinkendes Volumen im Keil – das bestätigt die Schwäche.'}});
+
+add({id:'rechteck',cat:'formation',title:'Rechteck (Range)',sub:'Seitwärts zwischen zwei Linien',icon:'rechteck',
+ make(){const d=build([[0,96],[4,110],[8,100],[12,110],[16,100.3],[20,109.8],[24,100.2],[28,109.6],[31,112],[37,121]],{seed:88,noise:.35,wick:.4});
+  return{data:d,steps:[
+   {to:29,text:'Der Kurs pendelt lange zwischen zwei Preisen hin und her.'},
+   {text:'Oben der Widerstand, unten die Unterstützung – fertig ist das RECHTECK (die Range).',ov:[{t:'h',p:110,col:C.down,label:'OBERKANTE',from:3,to:31},{t:'h',p:100,col:C.up,label:'UNTERKANTE',from:3,to:31,lpos:'below'}]},
+   {to:38,text:'Ausbruch nach oben! Kursziel: Höhe des Rechtecks nach oben abtragen.',ov:[{t:'label',i:31,p:d[31].h,text:'AUSBRUCH ▲',col:C.gold},{t:'arrow',a:[14,100],b:[14,110],col:C.purple,label:'Höhe'},{t:'arrow',a:[34,110],b:[34,120],col:C.purple,label:'Ziel'}],hold:600}]};},
+ box:{was:'Eine Seitwärtsphase zwischen einem waagerechten Widerstand und einer waagerechten Unterstützung.',
+  erkennen:['Mindestens zwei Hochs und zwei Tiefs auf gleicher Höhe','Kein klarer Trend','Ausbruch nach oben oder unten möglich'],
+  bedeutung:'Käufer und Verkäufer sind im Gleichgewicht. Je länger die Range, desto stärker oft der Ausbruch.',
+  tipp:'In der Range: unten kaufen, oben verkaufen. Beim Ausbruch: in Ausbruchsrichtung handeln.'}});
+
+add({id:'cup-handle',cat:'formation',title:'Cup & Handle',sub:'Tasse mit Henkel',icon:'cup',
+ make(){const d=build([[0,118],[3,116],[6,110.5],[9,106],[12,103.5],[15,104],[18,106.5],[21,111],[24,117.3],[26,117.8],[28,115.4],[30,114.8],[32,116.4],[34,119.5],[40,129]],{seed:90,noise:.3,wick:.4});
+  return{data:d,steps:[
+   {to:25,text:'Der Kurs fällt langsam und steigt rund wieder an – wie eine TASSE.',ov:[{t:'path',pts:[[0,118],[3,116],[6,110.5],[9,106],[12,103.5],[15,104],[18,106.5],[21,111],[24,117.3]],col:C.blue},{t:'label',i:12,p:d[12].l,text:'TASSE',col:C.blue,pos:'below'}]},
+   {text:'Der Rand der Tasse ist ein Widerstand.',ov:[{t:'h',p:118.2,col:C.down,label:'RAND',from:0,to:36}]},
+   {to:33,text:'Eine kleine Pause nach unten – der HENKEL.',ov:[{t:'zone',i1:27,i2:31,col:C.gold,label:'HENKEL',below:true}]},
+   {to:41,text:'Ausbruch über den Rand. Kursziel: Tiefe der Tasse nach oben abtragen.',ov:[{t:'arrow',a:[13,103.5],b:[13,118.2],col:C.purple,label:'Tiefe'},{t:'arrow',a:[36,118.2],b:[36,133],col:C.purple,label:'Ziel'}],hold:600}]};},
+ box:{was:'Eine bullische Fortsetzungsformation: ein runder Boden (Tasse) und danach eine kleine Pause (Henkel).',
+  erkennen:['Runder, U-förmiger Boden – kein spitzes V','Beide Seiten der Tasse etwa gleich hoch','Kleiner Henkel, nicht tiefer als ca. ein Drittel der Tasse'],
+  bedeutung:'Die Verkäufer werden langsam „ausgeschüttelt“, danach übernehmen die Käufer.',
+  tipp:'Cup & Handle braucht Zeit – auf Tagescharts dauert eine Tasse oft Wochen bis Monate.'}});
+
+add({id:'dreifachboden',cat:'formation',title:'Dreifach-Boden',sub:'Drei Tiefs auf gleicher Höhe',icon:'dreifach',
+ make(){const d=build([[0,114],[6,100],[10,107],[16,100.4],[20,107],[26,100.2],[30,107.5],[32,109],[34,107.6],[40,115]],{seed:92,noise:.35,wick:.4});
+  return{data:d,steps:[
+   {to:27,text:'Der Kurs testet DREIMAL dieselbe Unterstützung – und sie hält jedes Mal.',ov:[{t:'label',i:6,p:d[6].l,text:'1',col:C.up,pos:'below'},{t:'label',i:16,p:d[16].l,text:'2',col:C.up,pos:'below'},{t:'label',i:26,p:d[26].l,text:'3',col:C.up,pos:'below'}]},
+   {text:'Die Hochs dazwischen bilden die Nackenlinie.',ov:[{t:'h',p:107.3,col:C.blue,label:'NACKENLINIE',from:4,to:40}]},
+   {to:41,text:'Ausbruch über die Nackenlinie – der Abwärtstrend ist vorbei.',ov:[{t:'label',i:32,p:d[32].h,text:'AUSBRUCH ▲',col:C.gold}],hold:600}]};},
+ box:{was:'Wie ein Doppelter Boden, nur mit drei Tiefs auf etwa gleicher Höhe.',
+  erkennen:['Drei Tiefs auf gleicher Höhe','Nackenlinie durch die Hochs dazwischen','Bestätigung beim Ausbruch über die Nackenlinie'],
+  bedeutung:'Die Verkäufer scheitern dreimal – ein sehr starkes Zeichen, dass der Boden hält.',
+  tipp:'Das Gegenstück oben heißt Dreifach-Top und ist bärisch.'}});
+
+LESSONS.sort((a,b)=>Object.keys(CATS).indexOf(a.cat)-Object.keys(CATS).indexOf(b.cat));
+
 /* ============ Mini-Icons ============ */
 function icon(k){
  const g='#1fcf8f',r='#f0605d',y='#f5c542',b='#4c9aff';
@@ -613,6 +815,23 @@ function icon(k){
   hebel:`<line x1="3" y1="24" x2="29" y2="10" stroke="#9aa6b6" stroke-width="2"/><polygon points="14,25 18,25 16,18" fill="${y}"/><line x1="2" y1="29" x2="30" y2="29" stroke="${r}" stroke-dasharray="2 2"/>`,
   trail:`<polyline points="3,26 8,18 11,21 16,12 19,15 24,7 29,9" fill="none" stroke="${g}" stroke-width="1.5"/><path d="M3 28h8v-5h8v-6h10" fill="none" stroke="${y}" stroke-width="1.4"/>`,
   psycho:`<circle cx="16" cy="16" r="11" fill="none" stroke="${y}" stroke-width="1.5"/><circle cx="12" cy="14" r="1.5" fill="${y}"/><circle cx="20" cy="14" r="1.5" fill="${y}"/><path d="M11 22c3-3 7-3 10 0" fill="none" stroke="${y}" stroke-width="1.5"/>`,
+  insidebar:c(11,24,8,6,26,g)+c(20,18,13,11,20,y),
+  harami:c(11,6,24,5,26,r)+c(20,18,14,12,20,g),
+  tweezerb:c(12,10,22,9,27,r)+c(20,22,10,8,27,g)+`<line x1="5" y1="27" x2="27" y2="27" stroke="${y}" stroke-dasharray="2 2"/>`,
+  tweezert:c(12,22,10,5,23,g)+c(20,10,22,5,24,r)+`<line x1="5" y1="5" x2="27" y2="5" stroke="${y}" stroke-dasharray="2 2"/>`,
+  marubozu:c(9,18,16,14,20,y)+c(17,26,6,6,26,g)+c(25,8,10,6,12,g),
+  hanging:c(9,18,12,11,19,g)+c(16,8,6,5,20,g)+c(23,9,16,8,18,r),
+  invhammer:c(9,8,16,7,17,r)+c(16,24,22,9,25,g)+c(23,20,14,13,21,g),
+  kraehen:c(9,6,12,5,13,r)+c(16,12,19,11,20,r)+c(23,19,26,18,27,r),
+  isks:`<polyline points="2,6 7,18 11,12 16,27 21,12 25,18 30,5" fill="none" stroke="${y}" stroke-width="1.6"/><line x1="4" y1="12" x2="30" y2="12" stroke="${b}" stroke-width="1.2" stroke-dasharray="3 2"/>`,
+  dreieckab:`<line x1="3" y1="24" x2="29" y2="24" stroke="${g}" stroke-width="1.5"/><line x1="3" y1="5" x2="27" y2="23" stroke="${r}" stroke-width="1.5"/>`,
+  dreiecksym:`<line x1="3" y1="5" x2="29" y2="16" stroke="${r}" stroke-width="1.5"/><line x1="3" y1="27" x2="29" y2="16" stroke="${g}" stroke-width="1.5"/>`,
+  flaggebaer:`<line x1="7" y1="4" x2="7" y2="26" stroke="#9aa6b6" stroke-width="1.8"/><polygon points="8,26 26,22 26,13 8,17" fill="${hexA('#f5c542',.25)}" stroke="${y}" stroke-width="1.2"/>`,
+  wimpel:`<line x1="7" y1="28" x2="7" y2="6" stroke="#9aa6b6" stroke-width="1.8"/><polygon points="8,6 27,11 8,16" fill="${hexA('#f5c542',.25)}" stroke="${y}" stroke-width="1.2"/>`,
+  keilup:`<line x1="3" y1="28" x2="28" y2="9" stroke="${g}" stroke-width="1.5"/><line x1="3" y1="18" x2="28" y2="6" stroke="${r}" stroke-width="1.5"/>`,
+  rechteck:`<rect x="3" y="8" width="26" height="16" fill="${hexA('#4c9aff',.12)}" stroke="#4c9aff" stroke-width="1.2"/><polyline points="4,16 8,9 12,23 16,9 20,23 24,9 29,4" fill="none" stroke="#9aa6b6" stroke-width="1.2"/>`,
+  cup:`<path d="M3 7 C5 30 22 30 24 9 L27 13 L30 9" fill="none" stroke="${b}" stroke-width="1.8"/><line x1="2" y1="7" x2="30" y2="7" stroke="${r}" stroke-dasharray="2 2"/>`,
+  dreifach:`<polyline points="2,4 7,26 11,14 16,26 20,14 25,26 30,6" fill="none" stroke="${g}" stroke-width="1.7"/>`,
   vol:[6,8,5,7,6,16,22,12].map((h,i)=>`<rect x="${3+i*3.4}" y="${29-h}" width="2.4" height="${h}" fill="${i>4?y:'#5d6b7e'}"/>`).join('')
  };
  return `<svg width="30" height="30" viewBox="0 0 32 32">${P[k]||''}</svg>`;
@@ -728,7 +947,7 @@ window.addEventListener('resize',resize);
 const CATINFO={
  basis:{d:'Kerzen lesen, Trends, Linien und Zonen – das Fundament von allem.',acc:'#4c9aff'},
  kerzen:{d:'Einzelne Kerzen und Kombinationen, die Wenden ankündigen.',acc:'#1fcf8f'},
- formation:{d:'Große Muster im Chart: Schulter-Kopf-Schulter, W, M, Dreiecke, Flaggen.',acc:'#f5c542'},
+ formation:{d:'Große Muster im Chart: Schulter-Kopf-Schulter, W, M, Dreiecke, Flaggen, Keile und mehr.',acc:'#f5c542'},
  tools:{d:'Fibonacci, gleitende Durchschnitte, RSI und Volumen.',acc:'#b388ff'},
  risiko:{d:'Stop-Loss, CRV, Positionsgröße, Hebel und Psychologie.',acc:'#f0605d'}};
 const CATICON={basis:'trend',kerzen:'morning',formation:'sks',tools:'fib',risiko:'crv'};
@@ -778,7 +997,7 @@ function runCalc(){const gv=i=>num(document.getElementById(i).value),k=gv('k_kon
  <div style="grid-column:1/-1"><span>EINORDNUNG</span>${share<=100?`Die Position nutzt ${de(share,0)} % deines Kontos – kein Hebel nötig.`:`Die Position ist größer als dein Konto – du bräuchtest ca. ${de(lev,1)}× Hebel. Lieber einen engeren, sinnvollen Stop wählen oder weniger kaufen.`} ${e<s?'<br>(Stop über dem Einstieg = Short-Trade.)':''}</div>`;}
 
 /* ============ Quiz ============ */
-const QZ={doji:[13,13],hammer:[13,13],shootingstar:[13,13],'engulfing-bull':[12,13],'engulfing-bear':[12,13],morningstar:[11,13],eveningstar:[11,13],soldaten:[12,14]};
+const QZ={insidebar:[11,12],harami:[12,13],'tweezer-bottom':[12,13],'tweezer-top':[12,13],marubozu:[13,13],hangingman:[13,13],invhammer:[13,13],kraehen:[12,14],doji:[13,13],hammer:[13,13],shootingstar:[13,13],'engulfing-bull':[12,13],'engulfing-bear':[12,13],morningstar:[11,13],eveningstar:[11,13],soldaten:[12,14]};
 const TQ=[
  {q:'Was zeigt das obere Ende des Dochts einer Kerze?',a:['Den höchsten Preis im Zeitraum (Hoch)','Den Schlusskurs','Das Handelsvolumen','Den Eröffnungskurs'],e:'Der Docht reicht immer bis zum Hoch bzw. Tief des Zeitraums.',l:'kerze'},
  {q:'Wo liegt bei einer ROTEN Kerze die Eröffnung?',a:['Oben am Körper','Unten am Körper','Am Ende des unteren Dochts','Genau in der Mitte'],e:'Rot heißt: Der Kurs ist gefallen. Also liegt die Eröffnung oben und der Schluss unten.',l:'kerze'},
